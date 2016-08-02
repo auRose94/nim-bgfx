@@ -2,7 +2,7 @@
 BGFX wrapper for the nim programming language.
 
 ## Notes:
-  1. This needs to beta tested.
+  1. This needs to be beta tested.
   2. This package is missing some convenience methods and objects that might be found in other libs.
   3. All types and functions are availible but are mapped to match the C equivalents and may work. 
   4. Constants and preproccesor functions from C have been ported but should work as excpected (see **bgfx/constaints.nim**)
