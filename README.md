@@ -8,7 +8,7 @@ BGFX wrapper for the nim programming language.
   4. Constants and preproccesor functions from C have been ported but should work as excpected (see **bgfx/constaints.nim**)
   5. Should work on all platforms provided that the **.dll**, **.so**, or **.dylib** is availible with your program
   6. Because the bgfx library was programmed with specific integer types in mind **(i.e. uint8/16/32/64_t)**;
-    * You have to be incredibley specific because of nims type system (42'u16, 100'i32)
+    * You have to be incredibley specific because of nims type system (**42'u16**, **100'i32**)
     * You should take care that the bit flags do what you want
     * Convenience functions and objects are being made to mitigate this issue concisely.
   7. There might be a incompatibility with nims garbage collection system.
