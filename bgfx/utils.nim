@@ -2,5 +2,5 @@
 
 import bgfx
 
-proc FromArray*[T](data: seq[T]): ptr bgfx_memory =
+proc FromArray*[T](data: seq[T]): ptr bgfx_memory {.inline.} =
     bgfx_copy(addr(data), len(data))

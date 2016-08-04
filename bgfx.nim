@@ -41,29 +41,29 @@ type bgfx_topology_convert* = enum
     BGFX_TOPOLOGY_CONVERT_TRI_LIST_FLIP_WINDING, BGFX_TOPOLOGY_CONVERT_TRI_LIST_TO_LINE_LIST, BGFX_TOPOLOGY_CONVERT_TRI_STRIP_TO_TRI_LIST, BGFX_TOPOLOGY_CONVERT_LINE_STRIP_TO_LINE_LIST, BGFX_TOPOLOGY_CONVERT_COUNT
 
 type
-    bgfx_dynamic_index_buffer_handle* = object
+    bgfx_dynamic_index_buffer_handle* {.pure.} = object
         idx: uint16
-    bgfx_dynamic_vertex_buffer_handle* = object
+    bgfx_dynamic_vertex_buffer_handle* {.pure.} = object
         idx: uint16
-    bgfx_frame_buffer_handle* = object
+    bgfx_frame_buffer_handle* {.pure.} = object
         idx: uint16
-    bgfx_index_buffer_handle* = object
+    bgfx_index_buffer_handle* {.pure.} = object
         idx: uint16
-    bgfx_indirect_buffer_handle* = object
+    bgfx_indirect_buffer_handle* {.pure.} = object
         idx: uint16
-    bgfx_occlusion_query_handle* = object
+    bgfx_occlusion_query_handle* {.pure.} = object
         idx: uint16
-    bgfx_program_handle* = object
+    bgfx_program_handle* {.pure.} = object
         idx: uint16
-    bgfx_shader_handle* = object
+    bgfx_shader_handle* {.pure.} = object
         idx: uint16
-    bgfx_texture_handle* = object
+    bgfx_texture_handle* {.pure.} = object
         idx: uint16
-    bgfx_uniform_handle* = object
+    bgfx_uniform_handle* {.pure.} = object
         idx: uint16
-    bgfx_vertex_buffer_handle* = object
+    bgfx_vertex_buffer_handle* {.pure.} = object
         idx: uint16
-    bgfx_vertex_decl_handle* = object
+    bgfx_vertex_decl_handle* {.pure.} = object
         idx: uint16
 
 type bgfx_release_fn_t* = (proc(pntr: pointer, userdata: pointer){.cdecl.})
@@ -482,3 +482,65 @@ proc bgfx_get_internal_data*(): ptr bgfx_internal_data {.BGFX_C_API.}
 proc bgfx_override_internal_texture_ptr*(handle: bgfx_texture_handle, pntr: cuint): cuint {.BGFX_C_API.}
 
 proc bgfx_override_internal_texture*(handle: bgfx_texture_handle, width, height: uint16, numMips: uint8, format: bgfx_texture_format, flags: uint32): cuint {.BGFX_C_API.}
+
+# Ported C++ methods
+
+#[
+bgfx_dynamic_index_buffer_handle* {.pure.} = object
+    idx: uint16
+bgfx_dynamic_vertex_buffer_handle* {.pure.} = object
+    idx: uint16
+bgfx_frame_buffer_handle* {.pure.} = object
+    idx: uint16
+bgfx_index_buffer_handle* {.pure.} = object
+    idx: uint16
+bgfx_indirect_buffer_handle* {.pure.} = object
+    idx: uint16
+bgfx_occlusion_query_handle* {.pure.} = object
+    idx: uint16
+bgfx_program_handle* {.pure.} = object
+    idx: uint16
+bgfx_shader_handle* {.pure.} = object
+    idx: uint16
+bgfx_texture_handle* {.pure.} = object
+    idx: uint16
+bgfx_uniform_handle* {.pure.} = object
+    idx: uint16
+bgfx_vertex_buffer_handle* {.pure.} = object
+    idx: uint16
+bgfx_vertex_decl_handle* {.pure.} = object
+    idx: uint16
+]#
+
+method isValid*(self: bgfx_dynamic_index_buffer_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
+
+method isValid*(self: bgfx_dynamic_vertex_buffer_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
+
+method isValid*(self: bgfx_frame_buffer_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
+
+method isValid*(self: bgfx_index_buffer_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
+
+method isValid*(self: bgfx_indirect_buffer_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
+
+method isValid*(self: bgfx_program_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
+
+method isValid*(self: bgfx_shader_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
+
+method isValid*(self: bgfx_texture_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
+
+method isValid*(self: bgfx_uniform_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
+
+method isValid*(self: bgfx_vertex_buffer_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
+
+method isValid*(self: bgfx_vertex_decl_handle): bool {.inline, base.} =
+    return self.idx != uint16.high
