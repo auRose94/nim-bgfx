@@ -13,6 +13,8 @@ elif defined(macosx):
 else:
   const LibName = "bgfx-shared-libRelease.so"
 
+{.pragma: BGFX_C_STRUCT, pure.}
+
 type bgfx_renderer_type* = enum
     BGFX_RENDERER_TYPE_NULL, BGFX_RENDERER_TYPE_DIRECT3D9, BGFX_RENDERER_TYPE_DIRECT3D11, BGFX_RENDERER_TYPE_DIRECT3D12, BGFX_RENDERER_TYPE_METAL, BGFX_RENDERER_TYPE_OPENGLES, BGFX_RENDERER_TYPE_OPENGL, BGFX_RENDERER_TYPE_VULKAN, BGFX_RENDERER_TYPE_COUNT
 
@@ -41,42 +43,42 @@ type bgfx_topology_convert* = enum
     BGFX_TOPOLOGY_CONVERT_TRI_LIST_FLIP_WINDING, BGFX_TOPOLOGY_CONVERT_TRI_LIST_TO_LINE_LIST, BGFX_TOPOLOGY_CONVERT_TRI_STRIP_TO_TRI_LIST, BGFX_TOPOLOGY_CONVERT_LINE_STRIP_TO_LINE_LIST, BGFX_TOPOLOGY_CONVERT_COUNT
 
 type
-    bgfx_dynamic_index_buffer_handle* {.pure.} = object
+    bgfx_dynamic_index_buffer_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_dynamic_vertex_buffer_handle* {.pure.} = object
+    bgfx_dynamic_vertex_buffer_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_frame_buffer_handle* {.pure.} = object
+    bgfx_frame_buffer_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_index_buffer_handle* {.pure.} = object
+    bgfx_index_buffer_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_indirect_buffer_handle* {.pure.} = object
+    bgfx_indirect_buffer_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_occlusion_query_handle* {.pure.} = object
+    bgfx_occlusion_query_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_program_handle* {.pure.} = object
+    bgfx_program_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_shader_handle* {.pure.} = object
+    bgfx_shader_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_texture_handle* {.pure.} = object
+    bgfx_texture_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_uniform_handle* {.pure.} = object
+    bgfx_uniform_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_vertex_buffer_handle* {.pure.} = object
+    bgfx_vertex_buffer_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
-    bgfx_vertex_decl_handle* {.pure.} = object
+    bgfx_vertex_decl_handle* {.BGFX_C_STRUCT.} = object
         idx: uint16
 
 type bgfx_release_fn_t* = (proc(pntr: pointer, userdata: pointer){.cdecl.})
 
-type bgfx_memory* {.pure.} = object
+type bgfx_memory* {.BGFX_C_STRUCT.} = object
     data*: ptr uint8
     size*: uint32
 
-type bgfx_transform* {.pure.} = object
+type bgfx_transform* {.BGFX_C_STRUCT.} = object
     data*: ptr float
     num*: uint16
 
-type bgfx_hmd_eye* {.pure.} = object
+type bgfx_hmd_eye* {.BGFX_C_STRUCT.} = object
     rotation*: array[0..3, float]
     translation*: array[0..2, float]
     fov*: array[0..3, float]
@@ -84,7 +86,7 @@ type bgfx_hmd_eye* {.pure.} = object
     projection*: array[0..15, float]
     pixelsPerTanAngle*: array[0..1, float]
 
-type bgfx_hmd* {.pure.} = object
+type bgfx_hmd* {.BGFX_C_STRUCT.} = object
     eye*: array[0..1, bgfx_hmd_eye]
     width*: uint16
     height*: uint16
@@ -92,7 +94,7 @@ type bgfx_hmd* {.pure.} = object
     deviceHeight*: uint16
     flags*: uint8
 
-type bgfx_stats* {.pure.} = object
+type bgfx_stats* {.BGFX_C_STRUCT.} = object
     cpuTimeBegin*: uint64
     cpuTimeEnd*: uint64
     cpuTimerFreq*: uint64
@@ -102,19 +104,19 @@ type bgfx_stats* {.pure.} = object
     waitRender*: uint64
     waitSubmit*: uint64
 
-type bgfx_vertex_decl* {.pure.} = object
+type bgfx_vertex_decl* {.BGFX_C_STRUCT.} = object
     hash*: uint32
     stride*: uint16
     offset*: array[0..BGFX_ATTRIB_COUNT_CONST, uint16]
     attributes*: array[0..BGFX_ATTRIB_COUNT_CONST, uint16]
 
-type bgfx_transient_index_buffer* {.pure.} = object
+type bgfx_transient_index_buffer* {.BGFX_C_STRUCT.} = object
     data*: ptr uint8
     size*: uint32
     handle*: bgfx_index_buffer_handle
     startIndex*: uint32
 
-type bgfx_transient_vertex_buffer* {.pure.} = object
+type bgfx_transient_vertex_buffer* {.BGFX_C_STRUCT.} = object
     data*: ptr uint8
     size*: uint32
     startVertex*: uint32
@@ -122,7 +124,7 @@ type bgfx_transient_vertex_buffer* {.pure.} = object
     handle*: bgfx_vertex_buffer_handle
     decl*: bgfx_vertex_decl_handle
 
-type bgfx_instance_data_buffer* {.pure.} = object
+type bgfx_instance_data_buffer* {.BGFX_C_STRUCT.} = object
     data*: ptr uint8
     size*: uint32
     offset*: uint32
@@ -130,7 +132,7 @@ type bgfx_instance_data_buffer* {.pure.} = object
     stride*: uint16
     handle*: bgfx_vertex_buffer_handle
 
-type bgfx_texture_info* {.pure.} = object
+type bgfx_texture_info* {.BGFX_C_STRUCT.} = object
     format*: bgfx_texture_format
     storageSize*: uint32
     width*: uint16
@@ -140,16 +142,16 @@ type bgfx_texture_info* {.pure.} = object
     bitsPerPixel*: uint8
     cubeMap*: bool
 
-type bgfx_attachment* {.pure.} = object
+type bgfx_attachment* {.BGFX_C_STRUCT.} = object
     handle*: bgfx_texture_handle
     mip*: uint16
     layer*: uint16
 
-type bgfx_caps_gpu* {.pure.} = object
+type bgfx_caps_gpu* {.BGFX_C_STRUCT.} = object
     vendorId*: uint16
     deviceId*: uint16
 
-type bgfx_caps* {.pure.} = object
+type bgfx_caps* {.BGFX_C_STRUCT.} = object
     rendererType*: bgfx_renderer_type
     supported*: uint64
     maxDrawCalls*: uint32
@@ -178,7 +180,7 @@ type
     bgfx_capture_end_fn_t* = (proc(this: ptr bgfx_callback_interface) {.cdecl.})
     bgfx_capture_frame_fn_t* = (proc(this: ptr bgfx_callback_interface, data: pointer, size: uint32){.cdecl.})
 
-    bgfx_callback_vtbl* {.pure.} = object
+    bgfx_callback_vtbl* {.BGFX_C_STRUCT.} = object
         fatal: ptr bgfx_fatal_fn_t
         trace_vargs: ptr bgfx_trace_vargs_fn_t
         cache_read_size: ptr bgfx_cache_read_size_fn_t
@@ -189,16 +191,16 @@ type
         capture_end: ptr bgfx_capture_end_fn_t
         capture_frame: ptr bgfx_capture_frame_fn_t
 
-    bgfx_callback_interface* {.pure.} = object
+    bgfx_callback_interface* {.BGFX_C_STRUCT.} = object
         vtbl: ptr bgfx_callback_vtbl
 
 type
     bgfx_realloc_fn_t* = (proc(this: ptr bgfx_allocator_interface, pntr: pointer, size: csize, align: csize, file: cstring, line: uint32): pointer {.cdecl.})
 
-    bgfx_allocator_vtbl* {.pure.} = object
+    bgfx_allocator_vtbl* {.BGFX_C_STRUCT.} = object
         realloc: ptr bgfx_realloc_fn_t
 
-    bgfx_allocator_interface* {.pure.} = object
+    bgfx_allocator_interface* {.BGFX_C_STRUCT.} = object
         vtbl: ptr bgfx_allocator_vtbl
 
 {.pragma: BGFX_C_API, importc, dynlib:LibName, cdecl.}
