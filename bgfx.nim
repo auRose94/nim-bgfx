@@ -485,33 +485,6 @@ proc bgfx_override_internal_texture*(handle: bgfx_texture_handle, width, height:
 
 # Ported C++ methods
 
-#[
-bgfx_dynamic_index_buffer_handle* {.pure.} = object
-    idx: uint16
-bgfx_dynamic_vertex_buffer_handle* {.pure.} = object
-    idx: uint16
-bgfx_frame_buffer_handle* {.pure.} = object
-    idx: uint16
-bgfx_index_buffer_handle* {.pure.} = object
-    idx: uint16
-bgfx_indirect_buffer_handle* {.pure.} = object
-    idx: uint16
-bgfx_occlusion_query_handle* {.pure.} = object
-    idx: uint16
-bgfx_program_handle* {.pure.} = object
-    idx: uint16
-bgfx_shader_handle* {.pure.} = object
-    idx: uint16
-bgfx_texture_handle* {.pure.} = object
-    idx: uint16
-bgfx_uniform_handle* {.pure.} = object
-    idx: uint16
-bgfx_vertex_buffer_handle* {.pure.} = object
-    idx: uint16
-bgfx_vertex_decl_handle* {.pure.} = object
-    idx: uint16
-]#
-
 method isValid*(self: bgfx_dynamic_index_buffer_handle): bool {.inline, base.} =
     return self.idx != uint16.high
 
