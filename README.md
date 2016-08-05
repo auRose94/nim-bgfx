@@ -5,7 +5,7 @@ BGFX wrapper for the nim programming language.
   1. This needs to be beta tested.
   2. This package is missing some convenience methods and objects that might be found in other libs.
   3. All types and functions are availible but are mapped to match the C equivalents and may work. 
-  4. Constants and preproccesor functions from C have been ported but should work as excpected (see **bgfx/constaints.nim**)
+  4. Constants and preproccesor functions from C have been ported but should work as excpected (see **bgfx/constants.nim**)
   5. Should work on all platforms provided that the **.dll**, **.so**, or **.dylib** is availible with your program
   6. Because the bgfx library was programmed with specific integer types in mind **(i.e. uint8/16/32/64_t)**;
     * You have to be incredibley specific because of nims type system (**42'u16**, **100'i32**)
