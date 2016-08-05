@@ -77,92 +77,92 @@ type bgfx_transform* {.pure.} = object
     num*: uint16
 
 type bgfx_hmd_eye* {.pure.} = object
-    rotation: array[0..3, float]
-    translation: array[0..2, float]
-    fov: array[0..3, float]
-    viewOffset: array[0..2, float]
-    projection: array[0..15, float]
-    pixelsPerTanAngle: array[0..1, float]
+    rotation*: array[0..3, float]
+    translation*: array[0..2, float]
+    fov*: array[0..3, float]
+    viewOffset*: array[0..2, float]
+    projection*: array[0..15, float]
+    pixelsPerTanAngle*: array[0..1, float]
 
 type bgfx_hmd* {.pure.} = object
-    eye: array[0..1, bgfx_hmd_eye]
-    width: uint16
-    height: uint16
-    deviceWidth: uint16
-    deviceHeight: uint16
-    flags: uint8
+    eye*: array[0..1, bgfx_hmd_eye]
+    width*: uint16
+    height*: uint16
+    deviceWidth*: uint16
+    deviceHeight*: uint16
+    flags*: uint8
 
 type bgfx_stats* {.pure.} = object
-    cpuTimeBegin: uint64
-    cpuTimeEnd: uint64
-    cpuTimerFreq: uint64
-    gpuTimeBegin: uint64
-    gpuTimeEnd: uint64
-    gpuTimerFreq: uint64
-    waitRender: uint64
-    waitSubmit: uint64
+    cpuTimeBegin*: uint64
+    cpuTimeEnd*: uint64
+    cpuTimerFreq*: uint64
+    gpuTimeBegin*: uint64
+    gpuTimeEnd*: uint64
+    gpuTimerFreq*: uint64
+    waitRender*: uint64
+    waitSubmit*: uint64
 
 type bgfx_vertex_decl* {.pure.} = object
-    hash: uint32
-    stride: uint16
-    offset: array[0..BGFX_ATTRIB_COUNT_CONST, uint16]
-    attributes: array[0..BGFX_ATTRIB_COUNT_CONST, uint16]
+    hash*: uint32
+    stride*: uint16
+    offset*: array[0..BGFX_ATTRIB_COUNT_CONST, uint16]
+    attributes*: array[0..BGFX_ATTRIB_COUNT_CONST, uint16]
 
 type bgfx_transient_index_buffer* {.pure.} = object
-    data: ptr uint8
-    size: uint32
-    handle: bgfx_index_buffer_handle
-    startIndex: uint32
+    data*: ptr uint8
+    size*: uint32
+    handle*: bgfx_index_buffer_handle
+    startIndex*: uint32
 
 type bgfx_transient_vertex_buffer* {.pure.} = object
-    data: ptr uint8
-    size: uint32
-    startVertex: uint32
-    stride: uint16
-    handle: bgfx_vertex_buffer_handle
-    decl: bgfx_vertex_decl_handle
+    data*: ptr uint8
+    size*: uint32
+    startVertex*: uint32
+    stride*: uint16
+    handle*: bgfx_vertex_buffer_handle
+    decl*: bgfx_vertex_decl_handle
 
 type bgfx_instance_data_buffer* {.pure.} = object
-    data: ptr uint8
-    size: uint32
-    offset: uint32
-    num: uint32
-    stride: uint16
-    handle: bgfx_vertex_buffer_handle
+    data*: ptr uint8
+    size*: uint32
+    offset*: uint32
+    num*: uint32
+    stride*: uint16
+    handle*: bgfx_vertex_buffer_handle
 
 type bgfx_texture_info* {.pure.} = object
-    format: bgfx_texture_format
-    storageSize: uint32
-    width: uint16
-    height: uint16
-    depth: uint16
-    numMips: uint8
-    bitsPerPixel: uint8
-    cubeMap: bool
+    format*: bgfx_texture_format
+    storageSize*: uint32
+    width*: uint16
+    height*: uint16
+    depth*: uint16
+    numMips*: uint8
+    bitsPerPixel*: uint8
+    cubeMap*: bool
 
 type bgfx_attachment* {.pure.} = object
-    handle: bgfx_texture_handle
-    mip: uint16
-    layer: uint16
+    handle*: bgfx_texture_handle
+    mip*: uint16
+    layer*: uint16
 
 type bgfx_caps_gpu* {.pure.} = object
-    vendorId: uint16
-    deviceId: uint16
+    vendorId*: uint16
+    deviceId*: uint16
 
 type bgfx_caps* {.pure.} = object
-    rendererType: bgfx_renderer_type
-    supported: uint64
-    maxDrawCalls: uint32
-    maxTextureSize: uint16
-    maxViews: uint16
-    maxFBAttachments: uint8
-    numGPUs: uint8
-    homogeneousDepth: bool
-    originBottomLeft: bool
-    vendorId: uint16
-    deviceId: uint16
-    gpu: array[0..3, bgfx_caps_gpu]
-    formats: array[0..BGFX_TEXTURE_FORMAT_COUNT_CONST, uint16]
+    rendererType*: bgfx_renderer_type
+    supported*: uint64
+    maxDrawCalls*: uint32
+    maxTextureSize*: uint16
+    maxViews*: uint16
+    maxFBAttachments*: uint8
+    numGPUs*: uint8
+    homogeneousDepth*: bool
+    originBottomLeft*: bool
+    vendorId*: uint16
+    deviceId*: uint16
+    gpu*: array[0..3, bgfx_caps_gpu]
+    formats*: array[0..BGFX_TEXTURE_FORMAT_COUNT_CONST, uint16]
 
 type bgfx_fatal* = enum
     BGFX_FATAL_DEBUG_CHECK, BGFX_FATAL_MINIMUM_REQUIRED_SPECS, BGFX_FATAL_INVALID_SHADER, BGFX_FATAL_UNABLE_TO_INITIALIZE, BGFX_FATAL_UNABLE_TO_CREATE_TEXTURE, BGFX_FATAL_DEVICE_LOST, BGFX_FATAL_COUNT
@@ -465,17 +465,17 @@ type bgfx_render_frame* = enum
     BGFX_RENDER_FRAME_NO_CONTEXT, BGFX_RENDER_FRAME_RENDER, BGFX_RENDER_FRAME_EXITING, BGFX_RENDER_FRAME_COUNT
 
 type bgfx_platform_data* {.pure.} = object
-    ndt: pointer
-    nwh: pointer
-    context: pointer
-    backBuffer: pointer
-    backBufferDS: pointer
+    ndt*: pointer
+    nwh*: pointer
+    context*: pointer
+    backBuffer*: pointer
+    backBufferDS*: pointer
 
 proc bgfx_set_platform_data*(data: ptr bgfx_platform_data) {.BGFX_C_API.}
 
 type bgfx_internal_data* {.pure.} = object
-    caps: ptr bgfx_caps
-    context: pointer
+    caps*: ptr bgfx_caps
+    context*: pointer
 
 proc bgfx_get_internal_data*(): ptr bgfx_internal_data {.BGFX_C_API.}
 
