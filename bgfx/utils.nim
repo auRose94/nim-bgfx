@@ -1,6 +1,6 @@
 # BGFX WRAPPER UTILITIES
 
-import bgfx
+import c99.bgfx
 
-proc FromArray*[T](data: seq[T]): ptr bgfx_memory {.inline.} =
+proc FromArray*[T](data: seq[T]): ptr bgfx_memory_t {.inline.} =
     bgfx_copy(addr(data), len(data))
