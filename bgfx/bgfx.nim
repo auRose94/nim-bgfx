@@ -197,9 +197,9 @@ type VertexDeclaration* = bgfx_vertex_decl_handle_t
 
 const InvalidHandle* = uint16.high
 
-type CallbackI* = bgfx_callback_vtbl_t
+type CallbackI* = ptr bgfx_callback_vtbl_t
 
-type AllocatorI* = bgfx_allocator_interface_t
+type AllocatorI* = ptr bgfx_allocator_interface_t
 
 type ReleaseFn* = bgfx_release_fn_t
 
@@ -286,8 +286,8 @@ proc getSupportedRenderers*(en: array[RendererType.RendererType_Count, RendererT
 proc getRendererName*(rendererType: RendererType): string =
     return $bgfx_get_renderer_name(cast[bgfx_renderer_type_t](rendererType))
 
-proc init*(rendererType: RendererType = RendererType_Null, vendorId: Natural = BGFX_PCI_ID_NONE, deviceId: Natural = 0, callback: auto, allocator: auto): bool =
-    return bgfx_init(cast[bgfx_renderer_type_t](rendererType), cast[uint16](vendorId), cast[uint16](deviceId), cast[CallbackI](callback), cast[AllocatorI](allocator))
+proc init*(rendererType: RendererType = RendererType_Null, vendorId: Natural = BGFX_PCI_ID_NONE, deviceId: Natural = 0, callback: CallbackI = nil, allocator: AllocatorI = nil): bool =
+    return bgfx_init(cast[bgfx_renderer_type_t](rendererType), cast[uint16](vendorId), cast[uint16](deviceId), cast[ptr bgfx_callback_interface_t](callback), cast[ptr bgfx_allocator_interface_t](allocator))
 
 proc shutdown*() =
     bgfx_shutdown()
@@ -382,6 +382,9 @@ proc checkAvailTransientBuffers*(numVertices: Natural, decl: VertexDecl, numIndi
 
 proc allocTransientIndexBuffer*(tib: TransientIndexBuffer, num: Natural) =
     bgfx_alloc_transient_index_buffer(tib, cast[uint32](num))
+
+proc allocTransientVertexBuffer*(tvb: TransientVertexBuffer, num: Natural, decl: VertexDecl) =
+    bgfx_alloc_transient_vertex_buffer(tvb, cast[uint32](num), decl)
 
 proc allocTransientBuffers*(tvb: TransientVertexBuffer, decl: VertexDecl, numVertices: Natural, tib: TransientIndexBuffer, numIndices: Natural): bool =
     return bgfx_alloc_transient_buffers(tvb, decl, cast[uint32](numVertices), tib, cast[uint32](numIndices))
@@ -554,6 +557,9 @@ proc setScissor*(x, y, width, height: Natural): Natural =
 
 proc setScissor*(cache: Natural) =
     bgfx_set_scissor_cached(cast[uint16](cache))
+
+proc setTransform*(mtx: ptr float, num: Natural = 1): Natural =
+    return bgfx_set_transform(mtx, cast[uint16](num))
 
 proc setTransform*(mtx: var seq[float], num: Natural = 1): Natural =
     return bgfx_set_transform(mtx.addr, cast[uint16](num))
