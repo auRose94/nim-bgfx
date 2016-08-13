@@ -1,9 +1,13 @@
 # nim-bgfx
-[BGFX](https://github.com/bkaradzic/bgfx) binding and wrapper for the nim programming language.
-[BGFX](https://github.com/bkaradzic/bgfx) is graphics library that has a variety of backends and features.
-BGFX's original and primary maintainer is [Branimir Karadzic](https://github.com/bkaradzic).
+> [bgfx](https://github.com/bkaradzic/bgfx) graphics library binding and wrapper for the nim programming language.
+
+[bgfx](https://github.com/bkaradzic/bgfx) is a graphics library that has a variety of backends and features.
+
+bgfx's original and primary maintainer is [Branimir Karadzic](https://github.com/bkaradzic).
+
 nim-bgfx's is original and primary maintainer is [Cory Noll Crimmins - Golden](https://github.com/Halsys).
-You may contact me([Cory](https://github.com/Halsys)), if you ever face a problem related to this library. However all problems relating to features and internal issues that are a part of BGFX should be taken up with BGFX's community and [Branimir](https://github.com/bkaradzic)
+
+You may contact me([Cory](https://github.com/Halsys)), if you ever face a problem related to this library. However all problems relating to features and internal issues that are a part of bgfx should be taken up with bgfx's community and [Branimir](https://github.com/bkaradzic)
 
 ## Notes:
   1. This needs to be beta tested, but is known to work.
