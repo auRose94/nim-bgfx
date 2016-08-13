@@ -540,7 +540,7 @@ proc resetView*(id: Natural) =
 proc setMarker*(marker: string) =
     bgfx_set_marker(marker)
 
-proc setState*(stateFlag: uint32, rgba: uint32 = 0) =
+proc setState*(stateFlag: uint64, rgba: uint32 = 0) =
     bgfx_set_state(stateFlag, rgba)
 
 proc setCondition*(handle: OcclusionQuery, visible: bool) =
