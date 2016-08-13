@@ -1,7 +1,9 @@
 # nim-bgfx
 > [bgfx](https://github.com/bkaradzic/bgfx) graphics library binding and wrapper for the nim programming language.
 
-[bgfx](https://github.com/bkaradzic/bgfx) is a graphics library that has a variety of backends and features.
+[bgfx](https://github.com/bkaradzic/bgfx) is a rendering library that has a variety of graphics backends supported and a bunch of other neat features.
+  * Supported backends; Direct3D 9, Direct3D 11, Direct3D 12 (WIP), Metal (WIP), OpenGL 2.1, OpenGL 3.1+, OpenGL ES 2, OpenGL ES 3.1, WebGL 1.0, and WebGL 2.0
+  * Other features include occlusion querying, compute shader programs, draw and compute bucket sorting, conversion to compressed formats, and more.
 
 bgfx's original and primary maintainer is [Branimir Karadzic](https://github.com/bkaradzic).
 
@@ -12,12 +14,12 @@ You may contact me([Cory](https://github.com/Halsys)), if you ever face a proble
 ## Notes:
   1. This needs to be beta tested, but is known to work.
   2. This package is missing some convenience methods and objects that might be found in other libs.
-  3. All types and functions are availible but are mapped to match the C and CPP equivalents and may work. 
+  3. All types and functions are available but are mapped to match the C and CPP equivalents and may work.
     * The only exception is [dbgTextPrintf](https://github.com/bkaradzic/bgfx/blob/master/include/bgfx/bgfx.h#L1109), I don't know how to wrap this so I made [dbgTextPrintfNim](https://github.com/Halsys/nim-bgfx/blob/master/bgfx/bgfx.nim#L327) as a replacement.
-  4. Constants and preproccesor functions from C have been ported but should work as excpected (see **bgfx/constants.nim**)
-  5. Should work on all platforms provided that the **.dll**, **.so**, or **.dylib** is availible with your program
+  4. Constants and preprocessor functions from C have been ported but should work as expected (see **bgfx/constants.nim**)
+  5. Should work on all platforms provided that the **.dll**, **.so**, or **.dylib** is available with your program
   6. Because the bgfx library was programmed with specific integer types in mind **(i.e. uint8/16/32/64_t)**;
-    * You have to be incredibley specific because of nims type system (**42'u16**, **100'i32**)
+    * You have to be incredibly specific because of nims type system (**42'u16**, **100'i32**)
     * You should take care that the bit flags do what you want
     * Convenience functions and objects are being made to mitigate this issue concisely.
     * The CPP-esque methods and functions help with this.
@@ -28,6 +30,6 @@ You may contact me([Cory](https://github.com/Halsys)), if you ever face a proble
   10. You are free to send improvements but you should;
     * Make sure it matches how things operate on the C++ or C of the library.
     * Make sure that the code is readable.
-    * Note that there is no need to include documentation. (Unless it is necessary)
+    * Note that there is no need to include documentation. (Unless necessary)
     * Make sure it works on the latest stable version of nim.
   11. Only [nimrod-glfw](https://github.com/Halsys/nimrod-glfw) is known to hook up correctly with this because it is the only one supplying platform functions.
