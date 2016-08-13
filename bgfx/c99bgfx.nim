@@ -194,29 +194,29 @@ const
     BGFX_DEBUG_TEXT* = 0x00000008'u16 #!< Enable debug text display.
 
 const
-    BGFX_BUFFER_NONE* = 0x00000000'u32 #!<
-    BGFX_BUFFER_COMPUTE_FORMAT_8x1* = 0x00000001'u32 #!<
-    BGFX_BUFFER_COMPUTE_FORMAT_8x2* = 0x00000002'u32 #!<
-    BGFX_BUFFER_COMPUTE_FORMAT_8x4* = 0x00000003'u32 #!<
-    BGFX_BUFFER_COMPUTE_FORMAT_16x1* = 0x00000004'u32 #!<
-    BGFX_BUFFER_COMPUTE_FORMAT_16x2* = 0x00000005'u32 #!<
-    BGFX_BUFFER_COMPUTE_FORMAT_16x4* = 0x00000006'u32 #!<
-    BGFX_BUFFER_COMPUTE_FORMAT_32x1* = 0x00000007'u32 #!<
-    BGFX_BUFFER_COMPUTE_FORMAT_32x2* = 0x00000008'u32 #!<
-    BGFX_BUFFER_COMPUTE_FORMAT_32x4* = 0x00000009'u32 #!<
-    BGFX_BUFFER_COMPUTE_FORMAT_SHIFT* = 0'u32
-    BGFX_BUFFER_COMPUTE_FORMAT_MASK* = 0x0000000F'u32 #!<
-    BGFX_BUFFER_COMPUTE_TYPE_UINT* = 0x00000010'u32 #!<
-    BGFX_BUFFER_COMPUTE_TYPE_INT* = 0x00000020'u32 #!<
-    BGFX_BUFFER_COMPUTE_TYPE_FLOAT* = 0x00000030'u32 #!<
-    BGFX_BUFFER_COMPUTE_TYPE_SHIFT* = 4'u32
-    BGFX_BUFFER_COMPUTE_TYPE_MASK* = 0x00000030'u32 #!<
-    BGFX_BUFFER_COMPUTE_READ* = 0x00000100'u32 #!< Buffer will be read by shader.
-    BGFX_BUFFER_COMPUTE_WRITE* = 0x00000200'u32 #!< Buffer will be used for writing.
-    BGFX_BUFFER_DRAW_INDIRECT* = 0x00000400'u32 #!< Buffer will be used for storing draw indirect commands.
-    BGFX_BUFFER_ALLOW_RESIZE* = 0x00000800'u32 #!<
-    BGFX_BUFFER_INDEX32* = 0x00001000'u32 #!<
-    BGFX_BUFFER_COMPUTE_READ_WRITE* = (0'u32 or BGFX_BUFFER_COMPUTE_READ or BGFX_BUFFER_COMPUTE_WRITE)
+    BGFX_BUFFER_NONE* = 0x00000000'u16 #!<
+    BGFX_BUFFER_COMPUTE_FORMAT_8x1* = 0x00000001'u16 #!<
+    BGFX_BUFFER_COMPUTE_FORMAT_8x2* = 0x00000002'u16 #!<
+    BGFX_BUFFER_COMPUTE_FORMAT_8x4* = 0x00000003'u16 #!<
+    BGFX_BUFFER_COMPUTE_FORMAT_16x1* = 0x00000004'u16 #!<
+    BGFX_BUFFER_COMPUTE_FORMAT_16x2* = 0x00000005'u16 #!<
+    BGFX_BUFFER_COMPUTE_FORMAT_16x4* = 0x00000006'u16 #!<
+    BGFX_BUFFER_COMPUTE_FORMAT_32x1* = 0x00000007'u16 #!<
+    BGFX_BUFFER_COMPUTE_FORMAT_32x2* = 0x00000008'u16 #!<
+    BGFX_BUFFER_COMPUTE_FORMAT_32x4* = 0x00000009'u16 #!<
+    BGFX_BUFFER_COMPUTE_FORMAT_SHIFT* = 0'u16
+    BGFX_BUFFER_COMPUTE_FORMAT_MASK* = 0x0000000F'u16 #!<
+    BGFX_BUFFER_COMPUTE_TYPE_UINT* = 0x00000010'u16 #!<
+    BGFX_BUFFER_COMPUTE_TYPE_INT* = 0x00000020'u16 #!<
+    BGFX_BUFFER_COMPUTE_TYPE_FLOAT* = 0x00000030'u16 #!<
+    BGFX_BUFFER_COMPUTE_TYPE_SHIFT* = 4'u16
+    BGFX_BUFFER_COMPUTE_TYPE_MASK* = 0x00000030'u16 #!<
+    BGFX_BUFFER_COMPUTE_READ* = 0x00000100'u16 #!< Buffer will be read by shader.
+    BGFX_BUFFER_COMPUTE_WRITE* = 0x00000200'u16 #!< Buffer will be used for writing.
+    BGFX_BUFFER_DRAW_INDIRECT* = 0x00000400'u16 #!< Buffer will be used for storing draw indirect commands.
+    BGFX_BUFFER_ALLOW_RESIZE* = 0x00000800'u16 #!<
+    BGFX_BUFFER_INDEX32* = 0x00001000'u16 #!<
+    BGFX_BUFFER_COMPUTE_READ_WRITE* = (0'u16 or BGFX_BUFFER_COMPUTE_READ or BGFX_BUFFER_COMPUTE_WRITE)
 
 const
     BGFX_TEXTURE_NONE* = 0x00000000'u32 #!<
@@ -347,16 +347,16 @@ const
     BGFX_CAPS_FORMAT_TEXTURE_MIP_AUTOGEN* = 0x00004000'u32 #!< Texture format supports auto-generated mips.
 
 const
-    BGFX_VIEW_NONE* = 0x00000000'u32 #!<
-    BGFX_VIEW_STEREO* = 0x00000001'u32 #!< View will be rendered in stereo mode.
+    BGFX_VIEW_NONE* = 0x00000000'u8 #!<
+    BGFX_VIEW_STEREO* = 0x00000001'u8 #!< View will be rendered in stereo mode.
 
 const
-    BGFX_SUBMIT_EYE_LEFT* = 0x00000001'u32 #!< Submit to left eye.
-    BGFX_SUBMIT_EYE_RIGHT* = 0x00000002'u32 #!< Submit to right eye.
-    BGFX_SUBMIT_EYE_MASK* = 0x00000003'u32 #!<
+    BGFX_SUBMIT_EYE_LEFT* = 0x00000001'u8 #!< Submit to left eye.
+    BGFX_SUBMIT_EYE_RIGHT* = 0x00000002'u8 #!< Submit to right eye.
+    BGFX_SUBMIT_EYE_MASK* = 0x00000003'u8 #!<
     BGFX_SUBMIT_EYE_FIRST* = BGFX_SUBMIT_EYE_LEFT
-    BGFX_SUBMIT_RESERVED_SHIFT* = 7'u32
-    BGFX_SUBMIT_RESERVED_MASK* = 0x00000080'u32 #!< Internal bits mask.
+    BGFX_SUBMIT_RESERVED_SHIFT* = 7'u8
+    BGFX_SUBMIT_RESERVED_MASK* = 0x00000080'u8 #!< Internal bits mask.
 
 const
     BGFX_PCI_ID_NONE* = 0x00000000'u16 #!< Autoselect adapter.
@@ -465,41 +465,44 @@ type
         BGFX_TOPOLOGY_CONVERT_TRI_STRIP_TO_TRI_LIST,
         BGFX_TOPOLOGY_CONVERT_LINE_STRIP_TO_LINE_LIST, BGFX_TOPOLOGY_CONVERT_COUNT
 
-    bgfx_dynamic_index_buffer_handle_t* = object
-        idx*: uint16
+    bgfx_topology_sort_t* = enum
+        BGFX_TOPOLOGY_SORT_DIRECTION_FRONT_TO_BACK_MIN,
+        BGFX_TOPOLOGY_SORT_DIRECTION_FRONT_TO_BACK_AVG,
+        BGFX_TOPOLOGY_SORT_DIRECTION_FRONT_TO_BACK_MAX,
+        BGFX_TOPOLOGY_SORT_DIRECTION_BACK_TO_FRONT_MIN,
+        BGFX_TOPOLOGY_SORT_DIRECTION_BACK_TO_FRONT_AVG,
+        BGFX_TOPOLOGY_SORT_DIRECTION_BACK_TO_FRONT_MAX,
+        BGFX_TOPOLOGY_SORT_DISTANCE_FRONT_TO_BACK_MIN,
+        BGFX_TOPOLOGY_SORT_DISTANCE_FRONT_TO_BACK_AVG,
+        BGFX_TOPOLOGY_SORT_DISTANCE_FRONT_TO_BACK_MAX,
+        BGFX_TOPOLOGY_SORT_DISTANCE_BACK_TO_FRONT_MIN,
+        BGFX_TOPOLOGY_SORT_DISTANCE_BACK_TO_FRONT_AVG,
+        BGFX_TOPOLOGY_SORT_DISTANCE_BACK_TO_FRONT_MAX, BGFX_TOPOLOGY_SORT_COUNT
 
-    bgfx_dynamic_vertex_buffer_handle_t* = object
-        idx*: uint16
 
-    bgfx_frame_buffer_handle_t* = object
-        idx*: uint16
+    bgfx_dynamic_index_buffer_handle_t* = distinct  uint16
 
-    bgfx_index_buffer_handle_t* = object
-        idx*: uint16
+    bgfx_dynamic_vertex_buffer_handle_t* = distinct  uint16
 
-    bgfx_indirect_buffer_handle_t* = object
-        idx*: uint16
+    bgfx_frame_buffer_handle_t* = distinct  uint16
 
-    bgfx_occlusion_query_handle_t* = object
-        idx*: uint16
+    bgfx_index_buffer_handle_t* = distinct  uint16
 
-    bgfx_program_handle_t* = object
-        idx*: uint16
+    bgfx_indirect_buffer_handle_t* = distinct  uint16
 
-    bgfx_shader_handle_t* = object
-        idx*: uint16
+    bgfx_occlusion_query_handle_t* = distinct  uint16
 
-    bgfx_texture_handle_t* = object
-        idx*: uint16
+    bgfx_program_handle_t* = distinct  uint16
 
-    bgfx_uniform_handle_t* = object
-        idx*: uint16
+    bgfx_shader_handle_t* = distinct  uint16
 
-    bgfx_vertex_buffer_handle_t* = object
-        idx*: uint16
+    bgfx_texture_handle_t* = distinct  uint16
 
-    bgfx_vertex_decl_handle_t* = object
-        idx*: uint16
+    bgfx_uniform_handle_t* = distinct  uint16
+
+    bgfx_vertex_buffer_handle_t* = distinct  uint16
+
+    bgfx_vertex_decl_handle_t* = distinct  uint16
 
     bgfx_caps_t* = object
         rendererType*: bgfx_renderer_type_t
@@ -763,7 +766,6 @@ type
 
     PFN_BGFX_GET_INTERFACE* = proc (version: uint32): ptr bgfx_interface_vtbl_t {.cdecl.}
 
-
 proc bgfx_vertex_decl_begin*(decl: ptr bgfx_vertex_decl_t; renderer: bgfx_renderer_type_t) {.importc, dynlib: BGFXLibraryName, cdecl.}
 proc bgfx_vertex_decl_add*(decl: ptr bgfx_vertex_decl_t; attrib: bgfx_attrib_t; num: uint8; typ: bgfx_attrib_type_t; normalized: bool; asInt: bool) {.importc, dynlib: BGFXLibraryName, cdecl.}
 proc bgfx_vertex_decl_skip*(decl: ptr bgfx_vertex_decl_t; num: uint8) {.importc, dynlib: BGFXLibraryName, cdecl.}
@@ -772,6 +774,8 @@ proc bgfx_vertex_pack*(input: array[4, cfloat]; inputNormalized: bool; attr: bgf
 proc bgfx_vertex_unpack*(output: array[4, cfloat]; attr: bgfx_attrib_t; decl: ptr bgfx_vertex_decl_t; data: pointer; index: uint32) {.importc, dynlib: BGFXLibraryName, cdecl.}
 proc bgfx_vertex_convert*(destDecl: ptr bgfx_vertex_decl_t; destData: pointer; srcDecl: ptr bgfx_vertex_decl_t; srcData: pointer; num: uint32) {.importc, dynlib: BGFXLibraryName, cdecl.}
 proc bgfx_weld_vertices*(output: ptr uint16; decl: ptr bgfx_vertex_decl_t; data: pointer; num: uint16; epsilon: cfloat): uint16 {.importc, dynlib: BGFXLibraryName, cdecl.}
+proc bgfx_topology_convert*(conversion: bgfx_topology_convert_t, dst: pointer, dstSize: uint32, indicies: pointer, numIndices: uint32, index32: bool): uint32 {.importc, dynlib: BGFXLibraryName, cdecl.}
+proc bgfx_topology_sort_tri_list*(sort: bgfx_topology_sort_t, dst: pointer, dstSize: uint32, dir: array[3,cfloat], pos: array[3, cfloat], vertices: pointer, stride: uint32, indices: pointer, numIndices: uint32, index32:bool) {.importc, dynlib: BGFXLibraryName, cdecl.}
 proc bgfx_image_swizzle_bgra8*(width: uint32; height: uint32; pitch: uint32; src: pointer; dst: pointer) {.importc, dynlib: BGFXLibraryName, cdecl.}
 proc bgfx_image_rgba8_downsample_2x2*(width: uint32; height: uint32; pitch: uint32; src: pointer; dst: pointer) {.importc, dynlib: BGFXLibraryName, cdecl.}
 proc bgfx_get_supported_renderers*(enm: array[BGFX_RENDERER_TYPE_COUNT, bgfx_renderer_type_t]): uint8 {.importc, dynlib: BGFXLibraryName, cdecl.}
