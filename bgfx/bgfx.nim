@@ -1,6 +1,7 @@
 # BGFX WRAPPER
 
 import c99bgfx, strutils, macros
+export c99bgfx
 
 type Fatal* = enum
     Fatal_DebugCheck = BGFX_FATAL_DEBUG_CHECK,
