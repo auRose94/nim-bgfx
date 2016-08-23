@@ -4,6 +4,15 @@
 
 {.deadCodeElim: on.}
 
+when defined(BGFX_SHARED_LIB_API):
+    when defined(windows):
+    elif defined(macosx):
+    elif defined(linux):
+    else:
+        raise newException("Unsupported platform, need lib names")
+else:
+    {.pragma: BGFXImport, header: "<bgfx/c99/bgfxplatform.h>", cdecl.}
+
 import defines, bgfx
 export defines
 
@@ -13,7 +22,7 @@ type RenderFrameEnum* = enum
     RenderFrame_Exiting,
     RenderFrame_Count
 
-proc RenderFrame*(): RenderFrameEnum {.discardable, importc: "bgfx_render_frame", header: "<bgfx/c99/bgfxplatform.h>".}
+proc RenderFrame*(): RenderFrameEnum {.BGFXImport, discardable, importc: "bgfx_render_frame".}
 
 type PlatformData* {.importc: "bgfx_platform_data_t", header: "<bgfx/c99/bgfxplatform.h>".} = object
     ndt* {.importc: "ndt".}: pointer
@@ -22,12 +31,12 @@ type PlatformData* {.importc: "bgfx_platform_data_t", header: "<bgfx/c99/bgfxpla
     backBuffer* {.importc: "backBuffer".}: pointer
     backBufferDS* {.importc: "backBufferDS".}: pointer
 
-proc SetPlatformData*(data: ptr PlatformData) {.importc: "bgfx_set_platform_data", header: "<bgfx/c99/bgfxplatform.h>".}
+proc SetPlatformData*(data: ptr PlatformData) {.BGFXImport, importc: "bgfx_set_platform_data".}
 
 type InternalData* {.importc: "bgfx_internal_data_t", header: "<bgfx/c99/bgfxplatform.h>".} = object
     caps* {.importc: "caps".}: ptr Caps
     context* {.importc: "context".}: pointer
 
-proc GetInternalData*(): ptr InternalData {.importc: "bgfx_get_internal_data", header: "<bgfx/c99/bgfxplatform.h>".}
-proc OverrideInternal*(handle: TextureHandle, pntr: pointer): pointer {.importc: "bgfx_override_internal_texture_ptr", header: "<bgfx/c99/bgfxplatform.h>".}
-proc OverrideInternal*(handle: TextureHandle, width, height: uint16_t, numMips: uint8_t, format: TextureFormat, flags: uint32_t = BGFX_TEXTURE_NONE): pointer {.importc: "bgfx_override_internal_texture", header: "<bgfx/c99/bgfxplatform.h>".}
+proc GetInternalData*(): ptr InternalData {.BGFXImport, importc: "bgfx_get_internal_data".}
+proc OverrideInternal*(handle: TextureHandle, pntr: pointer): pointer {.BGFXImport, importc: "bgfx_override_internal_texture_ptr".}
+proc OverrideInternal*(handle: TextureHandle, width, height: uint16_t, numMips: uint8_t, format: TextureFormat, flags: uint32_t = BGFX_TEXTURE_NONE): pointer {.BGFXImport, importc: "bgfx_override_internal_texture".}

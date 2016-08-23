@@ -1,2 +1,5 @@
 *.exe
 *.ndb
+*.dll
+*.so
+*.dylib
