@@ -22,6 +22,7 @@ else:
             {.passL: "-lbgfxRelease -lpsapi -lgdi32".}
         else:
             {.passL: "-lbgfxDebug -lpsapi -lgdi32".}
+    {.passL: "-lstdc++".} # For the c backend of nim... not required for c++.
     {.pragma: BGFXImport, header: "<bgfx/c99/bgfx.h>", cdecl.}
 
 type va_list* {.importc,header:"<stdarg.h>".} = distinct pointer

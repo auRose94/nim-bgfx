@@ -6,8 +6,11 @@
 
 when defined(BGFX_SHARED_LIB_API):
     when defined(windows):
+        {.pragma: BGFXImport, dynlib: "bgfx-shared-lib(Debug|Release).dll", cdecl.}
     elif defined(macosx):
+        {.pragma: BGFXImport, dynlib: "libbgfx-shared-lib(Debug|Release).dylib", cdecl.}
     elif defined(linux):
+        {.pragma: BGFXImport, dynlib: "libbgfx-shared-lib(Debug|Release).so", cdecl.}
     else:
         raise newException("Unsupported platform, need lib names")
 else:
