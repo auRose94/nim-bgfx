@@ -25,7 +25,7 @@ else:
     {.passL: "-lstdc++".} # For the c backend of nim... not required for c++.
     {.pragma: BGFXImport, header: "<bgfx/c99/bgfx.h>", cdecl.}
 
-type va_list* {.importc,header:"<stdarg.h>".} = distinct pointer
+type va_list* {.importc,header:"<stdarg.h>".} = object
 
 type
     uint64_t* {.importc,header:"<stdint.h>".} = uint64
@@ -247,25 +247,25 @@ type
         idx*: uint16_t
 
 type
-    CBFatalProc* = proc (this: ptr CallbackI; code: Fatal; str: cstring) {.cdecl.}
-    CBTraceVargsProc* = proc (this: ptr CallbackI; filePath: cstring; line: uint16; format: cstring, argList: va_list) {.cdecl.}
-    CBCacheReadSizeProc* = proc (this: ptr CallbackI; id: uint64): uint32 {.cdecl.}
-    CBCacheReadProc* = proc (this: ptr CallbackI; id: uint64; data: pointer; size: uint32): bool {.cdecl.}
-    CBCacheWriteProc* = proc (this: ptr CallbackI; id: uint64; data: pointer; size: uint32) {.cdecl.}
-    CBScreenShotProc* = proc (this: ptr CallbackI; filePath: cstring; width: uint32; height: uint32; pitch: uint32; data: pointer; size: uint32; yflip: bool) {.cdecl.}
-    CBCaptureBegin* = proc (this: ptr CallbackI; width: uint32; height: uint32; pitch: uint32; format: TextureFormat; yflip: bool) {.cdecl.}
-    CBCaptureEnd* = proc (this: ptr CallbackI) {.cdecl.}
-    CBCaptureFrame* = proc (this: ptr CallbackI; data: pointer; size: uint32) {.cdecl.}
+    CBFatalProc* = proc (this: ptr CallbackI; code: Fatal; str: cstring)
+    CBTraceVargsProc* = proc (this: ptr CallbackI; filePath: cstring; line: uint16; format: cstring, argList: va_list)
+    CBCacheReadSizeProc* = proc (this: ptr CallbackI; id: uint64): uint32
+    CBCacheReadProc* = proc (this: ptr CallbackI; id: uint64; data: pointer; size: uint32): bool
+    CBCacheWriteProc* = proc (this: ptr CallbackI; id: uint64; data: pointer; size: uint32)
+    CBScreenShotProc* = proc (this: ptr CallbackI; filePath: cstring; width: uint32; height: uint32; pitch: uint32; data: pointer; size: uint32; yflip: bool)
+    CBCaptureBegin* = proc (this: ptr CallbackI; width: uint32; height: uint32; pitch: uint32; format: TextureFormat; yflip: bool)
+    CBCaptureEnd* = proc (this: ptr CallbackI)
+    CBCaptureFrame* = proc (this: ptr CallbackI; data: pointer; size: uint32)
     CallbackVTable* {.importc: "bgfx_callback_vtbl_t", header: "<bgfx/c99/bgfx.h>".} = object
-        fatal* {.importc: "fatal".}: CBFatalProc
-        trace_vargs* {.importc: "trace_vargs".}: CBTraceVargsProc
-        cache_read_size* {.importc: "cache_read_size".}: CBCacheReadSizeProc
-        cache_read* {.importc: "cache_read".}: CBCacheReadProc
-        cache_write* {.importc: "cache_write".}: CBCacheWriteProc
-        screen_shot* {.importc: "screen_shot".}: CBScreenShotProc
-        capture_begin* {.importc: "capture_begin".}: CBCaptureBegin
-        capture_end* {.importc: "capture_end".}: CBCaptureEnd
-        capture_frame* {.importc: "capture_frame".}: CBCaptureFrame
+        fatal* {.importc: "fatal".}: pointer # CBFatalProc
+        trace_vargs* {.importc: "trace_vargs".}: pointer # CBTraceVargsProc
+        cache_read_size* {.importc: "cache_read_size".}: pointer # CBCacheReadSizeProc
+        cache_read* {.importc: "cache_read".}: pointer # CBCacheReadProc
+        cache_write* {.importc: "cache_write".}: pointer # CBCacheWriteProc
+        screen_shot* {.importc: "screen_shot".}: pointer # CBScreenShotProc
+        capture_begin* {.importc: "capture_begin".}: pointer # CBCaptureBegin
+        capture_end* {.importc: "capture_end".}: pointer # CBCaptureEnd
+        capture_frame* {.importc: "capture_frame".}: pointer # CBCaptureFrame
     CallbackI* {.importc: "bgfx_callback_interface_t", header: "<bgfx/c99/bgfx.h>".} = object
         vtbl* {.importc: "vtbl".}: ptr CallbackVTable
 
