@@ -328,6 +328,7 @@ type TextureInfo* {.importc: "bgfx_texture_info_t", header: "<bgfx/c99/bgfx.h>".
     width* {.importc: "width".}: uint16_t
     height* {.importc: "height".}: uint16_t
     depth* {.importc: "depth".}: uint16_t
+    numLayers* {.importc: "numLayers".}: uint16_t
     numMips* {.importc: "numMips".}: uint8_t
     bitsPerPixel* {.importc: "bitsPerPixel".}: uint8_t
     cubeMap* {.importc: "cubeMap".}: bool
@@ -419,6 +420,7 @@ proc MakeRef*(data: pointer; size: uint32_t; releaseFn: ReleaseFn = nil; userDat
 proc SetDebug*(debug: uint32_t) {.BGFXImport, importc: "bgfx_set_debug".}
 proc DbgTextClear*(attr: uint8_t = 0; small: bool = false) {.BGFXImport, importc: "bgfx_dbg_text_clear".}
 proc DbgTextPrintf*(x: uint16_t; y: uint16_t; attr: uint8_t; format: cstring) {.BGFXImport, varargs, importc: "bgfx_dbg_text_printf".}
+proc DbgTextVPrintf*(x: uint16_t; y: uint16_t; attr: uint8_t; format: cstring, argList: va_list) {.BGFXImport, importc: "bgfx_dbg_text_vprintf".}
 proc DbgTextImage*(x: uint16_t; y: uint16_t; width: uint16_t; height: uint16_t; data: pointer; pitch: uint16_t) {.BGFXImport, importc: "bgfx_dbg_text_image".}
 proc CreateIndexBuffer*(mem: ptr Memory; flags: uint16_t = BGFX_BUFFER_NONE): IndexBufferHandle {.BGFXImport, importc: "bgfx_create_index_buffer".}
 proc DestroyIndexBuffer*(handle: IndexBufferHandle) {.BGFXImport, importc: "bgfx_destroy_index_buffer".}
@@ -448,15 +450,15 @@ proc DestroyShader*(handle: ShaderHandle) {.BGFXImport, importc: "bgfx_destroy_s
 proc CreateProgram*(vsh: ShaderHandle; fsh: ShaderHandle; destroyShaders: bool = false): ProgramHandle {.BGFXImport, importc: "bgfx_create_program".}
 proc CreateProgram*(csh: ShaderHandle; destroyShaders: bool = false): ProgramHandle {.BGFXImport, importc: "bgfx_create_compute_program".}
 proc DestroyProgram*(handle: ProgramHandle) {.BGFXImport, importc: "bgfx_destroy_program".}
-proc CalcTextureSize*(info: ptr TextureInfo; width: uint16_t; height: uint16_t; depth: uint16_t; cubeMap: bool; numMips: uint8_t; format: TextureFormat) {.BGFXImport, importc: "bgfx_calc_texture_size".}
+proc CalcTextureSize*(info: ptr TextureInfo; width: uint16_t; height: uint16_t; depth: uint16_t; cubeMap: bool; hasMips: bool; numLayers: uint16_t; format: TextureFormat) {.BGFXImport, importc: "bgfx_calc_texture_size".}
 proc CreateTexture*(mem: ptr Memory; flags: uint32_t = BGFX_TEXTURE_NONE; skip: uint8_t = 0; info: ptr TextureInfo = nil): TextureHandle {.BGFXImport, importc: "bgfx_create_texture".}
-proc CreateTexture2d*(width: uint16_t; height: uint16_t; numMips: uint8_t; format: TextureFormat; flags: uint32_t = BGFX_TEXTURE_NONE; mem: ptr Memory = nil): TextureHandle {.BGFXImport, importc: "bgfx_create_texture_2d".}
-proc CreateTexture2d*(ratio: BackbufferRatio; numMips: uint8_t; format: TextureFormat; flags: uint32_t = BGFX_TEXTURE_NONE): TextureHandle {.BGFXImport, importc: "bgfx_create_texture_2d_scaled".}
-proc CreateTexture3d*(width: uint16_t; height: uint16_t; depth: uint16_t; numMips: uint8_t; format: TextureFormat; flags: uint32_t = BGFX_TEXTURE_NONE; mem: ptr Memory = nil): TextureHandle {.BGFXImport, importc: "bgfx_create_texture_3d".}
-proc CreateTextureCube*(size: uint16_t; numMips: uint8_t; format: TextureFormat; flags: uint32_t = BGFX_TEXTURE_NONE; mem: ptr Memory = nil): TextureHandle {.BGFXImport, importc: "bgfx_create_texture_cube".}
-proc UpdateTexture2d*(handle: TextureHandle; mip: uint8_t; x: uint16_t; y: uint16_t; width: uint16_t; height: uint16_t; mem: ptr Memory; pitch: uint16_t = uint16.high) {.BGFXImport, importc: "bgfx_update_texture_2d".}
+proc CreateTexture2d*(width: uint16_t; height: uint16_t; hasMips: bool; numLayers: uint16_t; format: TextureFormat; flags: uint32_t = BGFX_TEXTURE_NONE; mem: ptr Memory = nil): TextureHandle {.BGFXImport, importc: "bgfx_create_texture_2d".}
+proc CreateTexture2d*(ratio: BackbufferRatio; hasMips: bool; numLayers: uint16_t; format: TextureFormat; flags: uint32_t = BGFX_TEXTURE_NONE): TextureHandle {.BGFXImport, importc: "bgfx_create_texture_2d_scaled".}
+proc CreateTexture3d*(width: uint16_t; height: uint16_t; depth: uint16_t; hasMips: bool; format: TextureFormat; flags: uint32_t = BGFX_TEXTURE_NONE; mem: ptr Memory = nil): TextureHandle {.BGFXImport, importc: "bgfx_create_texture_3d".}
+proc CreateTextureCube*(size: uint16_t; hasMips: bool; numLayers: uint16_t; format: TextureFormat; flags: uint32_t = BGFX_TEXTURE_NONE; mem: ptr Memory = nil): TextureHandle {.BGFXImport, importc: "bgfx_create_texture_cube".}
+proc UpdateTexture2d*(handle: TextureHandle; layer: uint16_t; mip: uint8_t; x: uint16_t; y: uint16_t; width: uint16_t; height: uint16_t; mem: ptr Memory; pitch: uint16_t = uint16.high) {.BGFXImport, importc: "bgfx_update_texture_2d".}
 proc UpdateTexture3d*(handle: TextureHandle; mip: uint8_t; x: uint16_t; y: uint16_t; z: uint16_t; width: uint16_t; height: uint16_t; depth: uint16_t; mem: ptr Memory) {.BGFXImport, importc: "bgfx_update_texture_3d".}
-proc UpdateTextureCube*(handle: TextureHandle; side: uint8_t; mip: uint8_t; x: uint16_t; y: uint16_t; width: uint16_t; height: uint16_t; mem: ptr Memory; pitch: uint16_t = uint16.high) {.BGFXImport, importc: "bgfx_update_texture_cube".}
+proc UpdateTextureCube*(handle: TextureHandle; layer: uint16_t; side: uint8_t; mip: uint8_t; x: uint16_t; y: uint16_t; width: uint16_t; height: uint16_t; mem: ptr Memory; pitch: uint16_t = uint16.high) {.BGFXImport, importc: "bgfx_update_texture_cube".}
 proc ReadTexture*(handle: TextureHandle; data: pointer): uint32_t {.BGFXImport, importc: "bgfx_read_texture".}
 proc ReadTexture*(handle: FrameBufferHandle; attachment: uint8_t; data: pointer): uint32_t {.BGFXImport, importc: "bgfx_read_frame_buffer".}
 proc DestroyTexture*(handle: TextureHandle) {.BGFXImport, importc: "bgfx_destroy_texture".}
