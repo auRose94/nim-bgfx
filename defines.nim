@@ -324,22 +324,22 @@ const
     BGFX_CAPS_TEXTURE_CUBE_ARRAY* = 0x0000000000400000'u64 # Cubemap texture array is supported.
 
 const
-    BGFX_CAPS_FORMAT_TEXTURE_NONE* = 0x00000000'u32 # Texture format is not supported.
-    BGFX_CAPS_FORMAT_TEXTURE_2D* = 0x00000001'u32 # Texture format is supported.
-    BGFX_CAPS_FORMAT_TEXTURE_2D_SRGB* = 0x00000002'u32 # Texture as sRGB format is supported.
-    BGFX_CAPS_FORMAT_TEXTURE_2D_EMULATED* = 0x00000004'u32 # Texture format is emulated.
-    BGFX_CAPS_FORMAT_TEXTURE_3D* = 0x00000008'u32 # Texture format is supported.
-    BGFX_CAPS_FORMAT_TEXTURE_3D_SRGB* = 0x00000010'u32 # Texture as sRGB format is supported.
-    BGFX_CAPS_FORMAT_TEXTURE_3D_EMULATED* = 0x00000020'u32 # Texture format is emulated.
-    BGFX_CAPS_FORMAT_TEXTURE_CUBE* = 0x00000040'u32 # Texture format is supported.
-    BGFX_CAPS_FORMAT_TEXTURE_CUBE_SRGB* = 0x00000080'u32 # Texture as sRGB format is supported.
-    BGFX_CAPS_FORMAT_TEXTURE_CUBE_EMULATED* = 0x00000100'u32 # Texture format is emulated.
-    BGFX_CAPS_FORMAT_TEXTURE_VERTEX* = 0x00000200'u32 # Texture format can be used from vertex shader.
-    BGFX_CAPS_FORMAT_TEXTURE_IMAGE* = 0x00000400'u32 # Texture format can be used as image from compute shader.
-    BGFX_CAPS_FORMAT_TEXTURE_FRAMEBUFFER* = 0x00000800'u32 # Texture format can be used as frame buffer.
-    BGFX_CAPS_FORMAT_TEXTURE_FRAMEBUFFER_MSAA* = 0x00001000'u32 # Texture format can be used as MSAA frame buffer.
-    BGFX_CAPS_FORMAT_TEXTURE_MSAA* = 0x00002000'u32 # Texture can be sampled as MSAA.
-    BGFX_CAPS_FORMAT_TEXTURE_MIP_AUTOGEN* = 0x00004000'u32 # Texture format supports auto-generated mips.
+    BGFX_CAPS_FORMAT_TEXTURE_NONE* = 0x0000'u16 # Texture format is not supported.
+    BGFX_CAPS_FORMAT_TEXTURE_2D* = 0x0001'u16 # Texture format is supported.
+    BGFX_CAPS_FORMAT_TEXTURE_2D_SRGB* = 0x0002'u16 # Texture as sRGB format is supported.
+    BGFX_CAPS_FORMAT_TEXTURE_2D_EMULATED* = 0x0004'u16 # Texture format is emulated.
+    BGFX_CAPS_FORMAT_TEXTURE_3D* = 0x0008'u16 # Texture format is supported.
+    BGFX_CAPS_FORMAT_TEXTURE_3D_SRGB* = 0x0010'u16 # Texture as sRGB format is supported.
+    BGFX_CAPS_FORMAT_TEXTURE_3D_EMULATED* = 0x0020'u16 # Texture format is emulated.
+    BGFX_CAPS_FORMAT_TEXTURE_CUBE* = 0x0040'u16 # Texture format is supported.
+    BGFX_CAPS_FORMAT_TEXTURE_CUBE_SRGB* = 0x0080'u16 # Texture as sRGB format is supported.
+    BGFX_CAPS_FORMAT_TEXTURE_CUBE_EMULATED* = 0x0100'u16 # Texture format is emulated.
+    BGFX_CAPS_FORMAT_TEXTURE_VERTEX* = 0x0200'u16 # Texture format can be used from vertex shader.
+    BGFX_CAPS_FORMAT_TEXTURE_IMAGE* = 0x0400'u16 # Texture format can be used as image from compute shader.
+    BGFX_CAPS_FORMAT_TEXTURE_FRAMEBUFFER* = 0x0800'u16 # Texture format can be used as frame buffer.
+    BGFX_CAPS_FORMAT_TEXTURE_FRAMEBUFFER_MSAA* = 0x1000'u16 # Texture format can be used as MSAA frame buffer.
+    BGFX_CAPS_FORMAT_TEXTURE_MSAA* = 0x2000'u16 # Texture can be sampled as MSAA.
+    BGFX_CAPS_FORMAT_TEXTURE_MIP_AUTOGEN* = 0x4000'u16 # Texture format supports auto-generated mips.
 
 const
     BGFX_VIEW_NONE* = 0x00'u8 #
