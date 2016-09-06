@@ -418,10 +418,10 @@ proc Alloc*(size: uint32_t): ptr Memory {.BGFXImport, importc: "bgfx_alloc".}
 proc Copy*(data: pointer; size: uint32_t): ptr Memory {.BGFXImport, importc: "bgfx_copy".}
 proc MakeRef*(data: pointer; size: uint32_t; releaseFn: ReleaseFn = nil; userData: pointer = nil): ptr Memory {.BGFXImport, importc: "bgfx_make_ref_release".}
 proc SetDebug*(debug: uint32_t) {.BGFXImport, importc: "bgfx_set_debug".}
-proc DbgTextClear*(attr: uint8_t = 0; small: bool = false) {.BGFXImport, importc: "bgfx_dbg_text_clear".}
-proc DbgTextPrintf*(x: uint16_t; y: uint16_t; attr: uint8_t; format: cstring) {.BGFXImport, varargs, importc: "bgfx_dbg_text_printf".}
-proc DbgTextVPrintf*(x: uint16_t; y: uint16_t; attr: uint8_t; format: cstring, argList: va_list) {.BGFXImport, importc: "bgfx_dbg_text_vprintf".}
-proc DbgTextImage*(x: uint16_t; y: uint16_t; width: uint16_t; height: uint16_t; data: pointer; pitch: uint16_t) {.BGFXImport, importc: "bgfx_dbg_text_image".}
+proc DebugTextClear*(attr: uint8_t = 0; small: bool = false) {.BGFXImport, importc: "bgfx_dbg_text_clear".}
+proc DebugTextPrintf*(x: uint16_t; y: uint16_t; attr: uint8_t; format: cstring) {.BGFXImport, varargs, importc: "bgfx_dbg_text_printf".}
+proc DebugTextVPrintf*(x: uint16_t; y: uint16_t; attr: uint8_t; format: cstring, argList: va_list) {.BGFXImport, importc: "bgfx_dbg_text_vprintf".}
+proc DebugTextImage*(x: uint16_t; y: uint16_t; width: uint16_t; height: uint16_t; data: pointer; pitch: uint16_t) {.BGFXImport, importc: "bgfx_dbg_text_image".}
 proc CreateIndexBuffer*(mem: ptr Memory; flags: uint16_t = BGFX_BUFFER_NONE): IndexBufferHandle {.BGFXImport, importc: "bgfx_create_index_buffer".}
 proc DestroyIndexBuffer*(handle: IndexBufferHandle) {.BGFXImport, importc: "bgfx_destroy_index_buffer".}
 proc CreateVertexBuffer*(mem: ptr Memory; decl: ptr VertexDecl; flags: uint16_t = BGFX_BUFFER_NONE): VertexBufferHandle {.BGFXImport, importc: "bgfx_create_vertex_buffer".}
@@ -431,7 +431,7 @@ proc CreateDynamicIndexBuffer*(mem: ptr Memory; flags: uint16_t = BGFX_BUFFER_NO
 proc UpdateDynamicIndexBuffer*(handle: DynamicIndexBufferHandle; startIndex: uint32_t; mem: ptr Memory) {.BGFXImport, importc: "bgfx_update_dynamic_index_buffer".}
 proc DestroyDynamicIndexBuffer*(handle: DynamicIndexBufferHandle) {.BGFXImport, importc: "bgfx_destroy_dynamic_index_buffer".}
 proc CreateDynamicVertexBuffer*(num: uint32_t; decl: ptr VertexDecl; flags: uint16_t = BGFX_BUFFER_NONE): DynamicVertexBufferHandle {.BGFXImport, importc: "bgfx_create_dynamic_vertex_buffer".}
-proc CreateDynamicVertexBufferMem*(mem: ptr Memory; decl: ptr VertexDecl; flags: uint16_t = BGFX_BUFFER_NONE): DynamicVertexBufferHandle {.BGFXImport, importc: "bgfx_create_dynamic_vertex_buffer_mem".}
+proc CreateDynamicVertexBuffer*(mem: ptr Memory; decl: ptr VertexDecl; flags: uint16_t = BGFX_BUFFER_NONE): DynamicVertexBufferHandle {.BGFXImport, importc: "bgfx_create_dynamic_vertex_buffer_mem".}
 proc UpdateDynamicVertexBuffer*(handle: DynamicVertexBufferHandle; startVertex: uint32_t; mem: ptr Memory) {.BGFXImport, importc: "bgfx_update_dynamic_vertex_buffer".}
 proc DestroyDynamicVertexBuffer*(handle: DynamicVertexBufferHandle) {.BGFXImport, importc: "bgfx_destroy_dynamic_vertex_buffer".}
 proc CheckAvailTransientIndexBuffer*(num: uint32_t): bool {.BGFXImport, importc: "bgfx_check_avail_transient_index_buffer".}
