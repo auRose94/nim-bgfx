@@ -2,6 +2,8 @@
 # License: BSD-2
 # Port for bgfx defines
 
+const BGFX_API_VERSION* = 26'u32
+
 const
     BGFX_STATE_RGB_WRITE* = 0x0000000000000001'u64 # Enable RGB write.
     BGFX_STATE_ALPHA_WRITE* = 0x0000000000000002'u64 # Enable alpha write.
@@ -72,17 +74,17 @@ const
 
 const BGFX_STATE_DEFAULT* = (0'u64 or BGFX_STATE_RGB_WRITE or BGFX_STATE_ALPHA_WRITE or BGFX_STATE_DEPTH_TEST_LESS or BGFX_STATE_DEPTH_WRITE or BGFX_STATE_CULL_CW or BGFX_STATE_MSAA)
 
-template BGFX_STATE_ALPHA_REF*(refer: expr): expr = (((refer) shl BGFX_STATE_ALPHA_REF_SHIFT) and BGFX_STATE_ALPHA_REF_MASK)
+template BGFX_STATE_ALPHA_REF*(refer: untyped): untyped = (((refer) shl BGFX_STATE_ALPHA_REF_SHIFT) and BGFX_STATE_ALPHA_REF_MASK)
 
-template BGFX_STATE_POINT_SIZE*(size: expr): expr = (((size) shl BGFX_STATE_POINT_SIZE_SHIFT) and BGFX_STATE_POINT_SIZE_MASK)
+template BGFX_STATE_POINT_SIZE*(size: untyped): untyped = (((size) shl BGFX_STATE_POINT_SIZE_SHIFT) and BGFX_STATE_POINT_SIZE_MASK)
 
-template BGFX_STATE_BLEND_FUNC_SEPARATE*(srcRGB, dstRGB, srcA, dstA: expr): expr = (0'u64) or (((srcRGB) or ((dstRGB) shl 4)) or (((srcA) or ((dstA) shl 4)) shl 8))
+template BGFX_STATE_BLEND_FUNC_SEPARATE*(srcRGB, dstRGB, srcA, dstA: untyped): untyped = (0'u64) or (((srcRGB) or ((dstRGB) shl 4)) or (((srcA) or ((dstA) shl 4)) shl 8))
 
-template BGFX_STATE_BLEND_EQUATION_SEPARATE*(rgb, a: expr): expr = ((rgb) or ((a) shl 3))
+template BGFX_STATE_BLEND_EQUATION_SEPARATE*(rgb, a: untyped): untyped = ((rgb) or ((a) shl 3))
 
-template BGFX_STATE_BLEND_FUNC*(src, dst: expr): expr = BGFX_STATE_BLEND_FUNC_SEPARATE(src, dst, src, dst)
+template BGFX_STATE_BLEND_FUNC*(src, dst: untyped): untyped = BGFX_STATE_BLEND_FUNC_SEPARATE(src, dst, src, dst)
 
-template BGFX_STATE_BLEND_EQUATION*(equation: expr): expr = BGFX_STATE_BLEND_EQUATION_SEPARATE(equation, equation)
+template BGFX_STATE_BLEND_EQUATION*(equation: untyped): untyped = BGFX_STATE_BLEND_EQUATION_SEPARATE(equation, equation)
 
 const
     BGFX_STATE_BLEND_ADD* = (BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_ONE))
@@ -94,21 +96,21 @@ const
     BGFX_STATE_BLEND_SCREEN* = (BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_COLOR))
     BGFX_STATE_BLEND_LINEAR_BURN* = (BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_DST_COLOR, BGFX_STATE_BLEND_INV_DST_COLOR) or BGFX_STATE_BLEND_EQUATION(BGFX_STATE_BLEND_EQUATION_SUB))
 
-template BGFX_STATE_BLEND_FUNC_RT_x*(src, dst: expr): expr = (0'u64 or (uint32((src) shr BGFX_STATE_BLEND_SHIFT) or (uint32((dst) shr BGFX_STATE_BLEND_SHIFT) shl 4)))
+template BGFX_STATE_BLEND_FUNC_RT_x*(src, dst: untyped): untyped = (0'u64 or (uint32((src) shr BGFX_STATE_BLEND_SHIFT) or (uint32((dst) shr BGFX_STATE_BLEND_SHIFT) shl 4)))
 
-template BGFX_STATE_BLEND_FUNC_RT_xE*(src, dst, equation: expr): expr = (0'u64 or BGFX_STATE_BLEND_FUNC_RT_x(src, dst) or (uint32((equation) shr BGFX_STATE_BLEND_EQUATION_SHIFT) shl 8))
+template BGFX_STATE_BLEND_FUNC_RT_xE*(src, dst, equation: untyped): untyped = (0'u64 or BGFX_STATE_BLEND_FUNC_RT_x(src, dst) or (uint32((equation) shr BGFX_STATE_BLEND_EQUATION_SHIFT) shl 8))
 
-template BGFX_STATE_BLEND_FUNC_RT_1*(src, dst: expr): expr = (BGFX_STATE_BLEND_FUNC_RT_x(src, dst) shl 0)
+template BGFX_STATE_BLEND_FUNC_RT_1*(src, dst: untyped): untyped = (BGFX_STATE_BLEND_FUNC_RT_x(src, dst) shl 0)
 
-template BGFX_STATE_BLEND_FUNC_RT_2*(src, dst: expr): expr = (BGFX_STATE_BLEND_FUNC_RT_x(src, dst) shl 11)
+template BGFX_STATE_BLEND_FUNC_RT_2*(src, dst: untyped): untyped = (BGFX_STATE_BLEND_FUNC_RT_x(src, dst) shl 11)
 
-template BGFX_STATE_BLEND_FUNC_RT_3*(src, dst: expr): expr = (BGFX_STATE_BLEND_FUNC_RT_x(src, dst) shl 22)
+template BGFX_STATE_BLEND_FUNC_RT_3*(src, dst: untyped): untyped = (BGFX_STATE_BLEND_FUNC_RT_x(src, dst) shl 22)
 
-template BGFX_STATE_BLEND_FUNC_RT_1E*(src, dst, equation: expr): expr = (BGFX_STATE_BLEND_FUNC_RT_xE(src, dst, equation) shl 0)
+template BGFX_STATE_BLEND_FUNC_RT_1E*(src, dst, equation: untyped): untyped = (BGFX_STATE_BLEND_FUNC_RT_xE(src, dst, equation) shl 0)
 
-template BGFX_STATE_BLEND_FUNC_RT_2E*(src, dst, equation: expr): expr = (BGFX_STATE_BLEND_FUNC_RT_xE(src, dst, equation) shl 11)
+template BGFX_STATE_BLEND_FUNC_RT_2E*(src, dst, equation: untyped): untyped = (BGFX_STATE_BLEND_FUNC_RT_xE(src, dst, equation) shl 11)
 
-template BGFX_STATE_BLEND_FUNC_RT_3E*(src, dst, equation: expr): expr = (BGFX_STATE_BLEND_FUNC_RT_xE(src, dst, equation) shl 22)
+template BGFX_STATE_BLEND_FUNC_RT_3E*(src, dst, equation: untyped): untyped = (BGFX_STATE_BLEND_FUNC_RT_xE(src, dst, equation) shl 22)
 
 const
     BGFX_STENCIL_FUNC_REF_SHIFT* = 0'u32
@@ -159,9 +161,9 @@ const
     BGFX_STENCIL_MASK* = 0xFFFFFFFF'u32 #
     BGFX_STENCIL_DEFAULT* = 0x00000000'u32 #
 
-template BGFX_STENCIL_FUNC_REF*(refer: expr): expr = ((uint32(refer) shl BGFX_STENCIL_FUNC_REF_SHIFT) and BGFX_STENCIL_FUNC_REF_MASK)
+template BGFX_STENCIL_FUNC_REF*(refer: untyped): untyped = ((uint32(refer) shl BGFX_STENCIL_FUNC_REF_SHIFT) and BGFX_STENCIL_FUNC_REF_MASK)
 
-template BGFX_STENCIL_FUNC_RMASK*(mask: expr): expr = ((uint32(mask) shl BGFX_STENCIL_FUNC_RMASK_SHIFT) and BGFX_STENCIL_FUNC_RMASK_MASK)
+template BGFX_STENCIL_FUNC_RMASK*(mask: untyped): untyped = ((uint32(mask) shl BGFX_STENCIL_FUNC_RMASK_SHIFT) and BGFX_STENCIL_FUNC_RMASK_MASK)
 
 const
     BGFX_CLEAR_NONE* = 0x0000'u16 # No clear flags.
@@ -268,7 +270,7 @@ const
     BGFX_TEXTURE_RESERVED_SHIFT* = 28'u32
     BGFX_TEXTURE_RESERVED_MASK* = 0xF0000000'u32 #
 
-template BGFX_TEXTURE_BORDER_COLOR*(index: expr): expr = ((index shl BGFX_TEXTURE_BORDER_COLOR_SHIFT) and BGFX_TEXTURE_BORDER_COLOR_MASK)
+template BGFX_TEXTURE_BORDER_COLOR*(index: untyped): untyped = ((index shl BGFX_TEXTURE_BORDER_COLOR_SHIFT) and BGFX_TEXTURE_BORDER_COLOR_MASK)
 
 const BGFX_TEXTURE_SAMPLER_BITS_MASK* = (0'u32 or BGFX_TEXTURE_U_MASK or BGFX_TEXTURE_V_MASK or BGFX_TEXTURE_W_MASK or BGFX_TEXTURE_MIN_MASK or BGFX_TEXTURE_MAG_MASK or BGFX_TEXTURE_MIP_MASK or BGFX_TEXTURE_COMPARE_MASK)
 

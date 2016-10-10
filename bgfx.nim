@@ -41,7 +41,6 @@ type
 
 type Fatal* {.importc: "bgfx_fatal_t", header: "<bgfx/c99/bgfx.h>".} = enum
     Fatal_DebugCheck
-    Fatal_MinimumRequiredSpecs
     Fatal_InvalidShader
     Fatal_UnableToInitialize
     Fatal_UnableToCreateTexture
@@ -49,10 +48,11 @@ type Fatal* {.importc: "bgfx_fatal_t", header: "<bgfx/c99/bgfx.h>".} = enum
     Fatal_Count
 
 type RendererType* {.importc: "bgfx_renderer_type_t", header: "<bgfx/c99/bgfx.h>".} = enum
-    RendererType_Null
+    RendererType_Noop
     RendererType_Direct3D9
     RendererType_Direct3D11
     RendererType_Direct3D12
+    RendererType_Gnm
     RendererType_Metal
     RendererType_OpenGLES
     RendererType_OpenGL
@@ -278,26 +278,43 @@ type
 type ReleaseFn* {.importc: "bgfx_release_fn_t", header: "<bgfx/c99/bgfx.h>".} = proc(pointer, userData: pointer)
 
 type Memory* {.importc: "bgfx_memory_t", header: "<bgfx/c99/bgfx.h>".} = object
-        data* {.importc: "data".}: ptr uint8_t
-        size* {.importc: "size".}: uint32_t
+    data* {.importc: "data".}: ptr uint8_t
+    size* {.importc: "size".}: uint32_t
 
 type CapsGPU* {.importc: "bgfx_caps_gpu_t", header: "<bgfx/c99/bgfx.h>".} = object
-        vendorId* {.importc: "vendorId".}: uint16_t
-        deviceId* {.importc: "deviceId".}: uint16_t
+    vendorId* {.importc: "vendorId".}: uint16_t
+    deviceId* {.importc: "deviceId".}: uint16_t
+
+type Limits* {.importc: "bgfx_caps_limits_t", header: "<bgfx/c99/bgfx.h>".} = object
+    maxDrawCalls* {.importc: "maxDrawCalls".}: uint32_t
+    maxBlits* {.importc: "maxBlits".}: uint32_t
+    maxTextureSize* {.importc: "maxTextureSize".}: uint32_t
+    maxViews* {.importc: "maxViews".}: uint32_t
+    maxFrameBuffers* {.importc: "maxFrameBuffers".}: uint32_t
+    maxFBAttachments* {.importc: "maxFBAttachments".}: uint32_t
+    maxPrograms* {.importc: "maxPrograms".}: uint32_t
+    maxShaders* {.importc: "maxShaders".}: uint32_t
+    maxTextures* {.importc: "maxTextures".}: uint32_t
+    maxTextureSamplers* {.importc: "maxTextureSamplers".}: uint32_t
+    maxVertexDecls* {.importc: "maxVertexDecls".}: uint32_t
+    maxVertexStreams* {.importc: "maxVertexStreams".}: uint32_t
+    maxIndexBuffers* {.importc: "maxIndexBuffers".}: uint32_t
+    maxVertexBuffers* {.importc: "maxVertexBuffers".}: uint32_t
+    maxDynamicIndexBuffers* {.importc: "maxDynamicIndexBuffers".}: uint32_t
+    maxDynamicVertexBuffers* {.importc: "maxDynamicVertexBuffers".}: uint32_t
+    maxUniforms* {.importc: "maxUniforms".}: uint32_t
+    maxOcclusionQueries* {.importc: "maxOcclusionQueries".}: uint32_t
 
 type Caps* {.importc: "bgfx_caps_t", header: "<bgfx/c99/bgfx.h>".} = object
     rendererType* {.importc: "rendererType".}: RendererType
     supported* {.importc: "supported".}: uint64_t
-    maxDrawCalls* {.importc: "maxDrawCalls".}: uint32_t
-    maxTextureSize* {.importc: "maxTextureSize".}: uint16_t
-    maxViews* {.importc: "maxViews".}: uint16_t
-    maxFBAttachments* {.importc: "maxFBAttachments".}: uint8_t
-    numGPUs* {.importc: "numGPUs".}: uint8_t
-    homogeneousDepth* {.importc: "homogeneousDepth".}: bool
-    originBottomLeft* {.importc: "originBottomLeft".}: bool
     vendorId* {.importc: "vendorId".}: uint16_t
     deviceId* {.importc: "deviceId".}: uint16_t
+    homogeneousDepth* {.importc: "homogeneousDepth".}: bool
+    originBottomLeft* {.importc: "originBottomLeft".}: bool
+    numGPUs* {.importc: "numGPUs".}: uint8
     gpu* {.importc: "gpu".}: array[4, CapsGPU]
+    limits* {.importc: "limits".}: Limits
     formats* {.importc: "formats".}: array[TextureFormat_Count, uint16_t]
 
 type TransientIndexBuffer* {.importc: "bgfx_transient_index_buffer_t", header: "<bgfx/c99/bgfx.h>".} = object
@@ -404,7 +421,7 @@ proc ConvertTopology*(conversion: TopologyConvert, dst: pointer, dstSize: uint32
 proc TopologySortTriList*(sort: TopologySort, dst: pointer, dstSize: uint32_t, dir: array[3,cfloat], pos: array[3, cfloat], vertices: pointer, stride: uint32_t, indices: pointer, numIndices: uint32_t, index32:bool) {.BGFXImport, importc: "bgfx_topology_sort_tri_list".}
 proc ImageSwizzleBgra8*(width: uint32_t; height: uint32_t; pitch: uint32_t; src: pointer; dst: pointer) {.BGFXImport, importc: "bgfx_image_swizzle_bgra8".}
 proc ImageRgba8Downsample2x2*(width: uint32_t; height: uint32_t; pitch: uint32_t; src: pointer; dst: pointer) {.BGFXImport, importc: "bgfx_image_rgba8_downsample_2x2".}
-proc GetSupportedRenderers*(enm: array[RendererType_Count, RendererType]): uint8_t {.BGFXImport, importc: "bgfx_get_supported_renderers".}
+proc GetSupportedRenderers*(max: uint8_t; enm: ptr RendererType): uint8_t {.BGFXImport, importc: "bgfx_get_supported_renderers".}
 proc GetRendererName*(typ: RendererType): cstring {.BGFXImport, importc: "bgfx_get_renderer_name".}
 proc Init*(typ: RendererType = RendererType_Count; vendorId: uint16_t = BGFX_PCI_ID_NONE; deviceId: uint16_t = 0; callback: ptr CallbackI = nil; allocator: pointer = nil): bool {.BGFXImport, discardable, importc: "bgfx_init".}
 proc Shutdown*() {.BGFXImport, importc: "bgfx_shutdown".}
