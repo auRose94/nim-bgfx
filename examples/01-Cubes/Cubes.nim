@@ -3,26 +3,12 @@
 # Port of bgfx cubes example 01 to nim and nim-bgfx
 
 import bgfx
-import bgfxplatform
 import ../bgfxutils
 import ../fpumath
+import ../platform
 import glfw3 as glfw
 import parseopt2
-import strutils
-import locks
 import os
-
-when defined(Windows):
-    import glfw3native.Win32 as glfwn
-elif defined(MacOSX):
-    import glfw3native.Cocoa as glfwn
-elif defined(Linux) or
-    defined(FreeBSD) or
-    defined(OpenBSD) or
-    defined(NetBSD) or
-    defined(Solaris) or
-    defined(QNX):
-    import glfw3native.X11 as glfwn
 
 type ExampleCubes = ref object
     m_width*: uint32
@@ -35,32 +21,6 @@ type ExampleCubes = ref object
     m_vbh*: bgfx.VertexBufferHandle
     m_ibh*: bgfx.IndexBufferHandle
     m_program*: bgfx.ProgramHandle
-
-proc LinkGLFW3WithBGFX*(window: Window) =
-    var pd: ptr PlatformData = create(PlatformData)
-    when defined(Windows):
-        pd.nwh = glfwn.GetWin32Window(window)
-        pd.ndt = nil
-    elif defined(MacOSX):
-        pd.nwh = glfwn.GetCocoaWindow(window)
-        pd.ndt = nil
-    elif defined(Linux) or
-        defined(FreeBSD) or
-        defined(OpenBSD) or
-        defined(NetBSD) or
-        defined(Solaris) or
-        defined(QNX):
-        pd.nwh = glfwn.GetX11Window(window)
-        pd.ndt = glfwn.GetX11Display(window)
-    else:
-        {.fatal: "Exposure of glfw3native functions is required".}
-    pd.backBuffer = nil
-    pd.backBufferDS = nil
-    pd.context = nil
-    SetPlatformData(pd)
-
-proc GLFWErrorCB(errorCode: cint; description: cstring) {.cdecl.} =
-    debugEcho "[GLFW3] error: $1, $2".format(errorCode, description)
 
 type PosColorVertex {.packed, pure.} = object
     x*, y*, z*: float32
@@ -131,8 +91,7 @@ proc Init(self: ptr ExampleCubes) {.thread.} =
 
     self.m_program = LoadProgram("vs_cubes", "fs_cubes")
 
-
-proc Shutdown(self: ptr ExampleCubes) {.thread.} =
+proc CleanUp(self: ptr ExampleCubes) {.thread.} =
     bgfx.Shutdown()
 
 proc Update(self: ptr ExampleCubes) {.thread.} =
@@ -147,10 +106,10 @@ proc Update(self: ptr ExampleCubes) {.thread.} =
     var toMs = 1000.0'f32
 
     # Use debug font to print information about this example.
-    bgfx.DbgTextClear()
-    bgfx.DbgTextPrintf(0, 1, 0x4f, "nim-bgfx/examples/01-Cubes")
-    bgfx.DbgTextPrintf(0, 2, 0x6f, "Description: Rendering simple static mesh.")
-    bgfx.DbgTextPrintf(0, 3, 0x0f, "Frame: %7.3f[ms] FPS: %7.3f", cast[float32](frameTime*toMs), cast[float32](1.0'f32 / (frameTime)));
+    bgfx.DebugTextClear()
+    bgfx.DebugTextPrintf(0, 1, 0x4f, "nim-bgfx/examples/01-Cubes")
+    bgfx.DebugTextPrintf(0, 2, 0x6f, "Description: Rendering simple static mesh.")
+    bgfx.DebugTextPrintf(0, 3, 0x0f, "Frame: %7.3f[ms] FPS: %7.3f", cast[float32](frameTime*toMs), cast[float32](1.0'f32 / (frameTime)));
 
     var at: Vec3  = [0.0'f32, 0.0'f32,   0.0'f32]
     var eye: Vec3 = [0.0'f32, 0.0'f32, -35.0'f32]
@@ -194,72 +153,4 @@ proc Update(self: ptr ExampleCubes) {.thread.} =
 
     bgfx.Frame()
 
-var app: ptr ExampleCubes = createShared(ExampleCubes)
-var AppLock: Lock
-app[] = ExampleCubes()
-initLock(AppLock)
-assert(not app.isNil)
-
-# Set up
-discard glfw.SetErrorCallback(GLFWErrorCB)
-
-if glfw.Init() != glfw.TRUE:
-    echo "[GLFW3] Failed to initialize!"
-    quit(QuitFailure)
-
-glfw.WindowHint(glfw.CLIENT_API, glfw.NO_API)
-var window: Window
-window = glfw.CreateWindow(1280, 720, "Cubes", nil, nil)
-if window == nil:
-    echo "[GLFW3] Failed to create window!"
-    quit(QuitFailure)
-glfw.SetWindowUserPointer(window, app)
-
-LinkGLFW3WithBGFX(window)
-
-var appThread: Thread[ptr ExampleCubes]
-
-proc appProc(app: ptr ExampleCubes) {.thread.} =
-    # Launch
-    app.Init()
-
-    # Update
-    while true:
-        if tryAcquire(AppLock):
-            if not app.m_Updated:
-                if app.m_BGFXNeedsToReset:
-                    bgfx.Reset(cast[uint16](app.m_width), cast[uint16](app.m_height), app.m_reset)
-                    app.m_BGFXNeedsToReset = false
-                app.Update()
-                app.m_Updated = true
-                if app.m_WindowIsClosing:
-                    release(AppLock)
-                    break
-            release(AppLock)
-    #We are done
-    app.Shutdown()
-
-createThread(appThread, appProc, app)
-
-while appThread.running:
-    bgfxplatform.RenderFrame()
-
-    # Do events on main thread and let aux know about them
-    glfw.PollEvents()
-    acquire(AppLock)
-    if app.m_Updated:
-        var current_width, current_height: cint
-        glfw.GetFramebufferSize(window, current_width.addr, current_height.addr)
-        if cast[uint32](current_width) != app.m_width or cast[uint32](current_height) != app.m_height:
-            echo "Window resize: ($1, $2)".format(current_width, current_height)
-            app.m_width = cast[uint32](current_width)
-            app.m_height = cast[uint32](current_height)
-            app.m_BGFXNeedsToReset = true
-        if glfw.WindowShouldClose(window) != 0:
-            app.m_WindowIsClosing = true
-        app.m_Updated = false
-    release(AppLock)
-
-
-glfw.DestroyWindow(window)
-glfw.Terminate()
+StartExample[ExampleCubes]()
