@@ -1,5 +1,5 @@
 # nim-bgfx
-> [bgfx](https://github.com/bkaradzic/bgfx) graphics library binding and wrapper for the nim programming language.
+> [bgfx](https://github.com/bkaradzic/bgfx) graphics library binding and wrapper for the nim programming language.    [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=96STXBG8HMW2E)
 
 [bgfx](https://github.com/bkaradzic/bgfx) is a rendering library that has a variety of graphics backends supported and a bunch of other neat features.
   * Supported backends; Direct3D 9, Direct3D 11, Direct3D 12 (WIP), Metal (WIP), OpenGL 2.1, OpenGL 3.1+, OpenGL ES 2, OpenGL ES 3.1, WebGL 1.0, and WebGL 2.0
