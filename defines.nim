@@ -1,8 +1,8 @@
-# Copyright 2016 Cory Noll Crimmins - Golden
+# Copyright 2017 Cory Noll Crimmins - Golden
 # License: BSD-2
 # Port for bgfx defines
 
-const BGFX_API_VERSION* = 26'u32
+const BGFX_API_VERSION* = 35'u32
 
 const
     BGFX_STATE_RGB_WRITE* = 0x0000000000000001'u64 # Enable RGB write.

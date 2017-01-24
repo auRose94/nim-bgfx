@@ -1,4 +1,4 @@
-# Copyright 2016 Cory Noll Crimmins - Golden
+# Copyright 2017 Cory Noll Crimmins - Golden
 # License: BSD-2
 # Wrapper/binding for bgfx
 
@@ -350,6 +350,11 @@ type TextureInfo* {.importc: "bgfx_texture_info_t", header: "<bgfx/c99/bgfx.h>".
     bitsPerPixel* {.importc: "bitsPerPixel".}: uint8_t
     cubeMap* {.importc: "cubeMap".}: bool
 
+type UniformInfo* {.importc: "bgfx_uniform_info_t", header: "<bgfx/c99/bgfx.h>".} = object
+    name* {.importc: "name".}: array[256, char]
+    uniformType* {.importc: "type".}: UniformType
+    size* {.importc: "num".}: uint16_t
+
 type Attachment* {.importc: "bgfx_attachment_t", header: "<bgfx/c99/bgfx.h>".} = object
     handle* {.importc: "handle".}: TextureHandle
     mip* {.importc: "mip".}: uint16_t
@@ -384,6 +389,13 @@ type Stats* {.importc: "bgfx_stats_t", header: "<bgfx/c99/bgfx.h>".} = object
     gpuTimerFreq* {.importc: "gpuTimerFreq".}: uint64_t
     waitRender* {.importc: "waitRender".}: int64_t
     waitSubmit* {.importc: "waitSubmit".}: int64_t
+    numDraw* {.importc: "numDraw"}: uint32_t
+    numCompute* {.importc: "numCompute"}: uint32_t
+    maxGpuLatency* {.importc: "maxGpuLatency"}: uint32_t
+    width* {.importc: "width"}: uint16_t
+    height* {.importc: "height"}: uint16_t
+    textWidth* {.importc: "textWidth"}: uint16_t
+    textHeight* {.importc: "textHeight".}: uint16_t
 
 type VertexDecl* {.importc: "bgfx_vertex_decl_t", header: "<bgfx/c99/bgfx.h>".} = object
     hash* {.importc: "hash".}: uint32_t
@@ -419,9 +431,9 @@ proc VertexConvert*(destDecl: ptr VertexDecl; destData: pointer; srcDecl: ptr Ve
 proc WeldVertices*(output: ptr uint16_t; decl: ptr VertexDecl; data: pointer; num: uint16_t; epsilon: cfloat = 0.001): uint16_t {.BGFXImport, importc: "bgfx_weld_vertices".}
 proc ConvertTopology*(conversion: TopologyConvert, dst: pointer, dstSize: uint32_t, indicies: pointer, numIndices: uint32_t, index32: bool): uint32_t {.BGFXImport, importc: "bgfx_topology_convert".}
 proc TopologySortTriList*(sort: TopologySort, dst: pointer, dstSize: uint32_t, dir: array[3,cfloat], pos: array[3, cfloat], vertices: pointer, stride: uint32_t, indices: pointer, numIndices: uint32_t, index32:bool) {.BGFXImport, importc: "bgfx_topology_sort_tri_list".}
-proc ImageSwizzleBgra8*(width: uint32_t; height: uint32_t; pitch: uint32_t; src: pointer; dst: pointer) {.BGFXImport, importc: "bgfx_image_swizzle_bgra8".}
-proc ImageRgba8Downsample2x2*(width: uint32_t; height: uint32_t; pitch: uint32_t; src: pointer; dst: pointer) {.BGFXImport, importc: "bgfx_image_rgba8_downsample_2x2".}
-proc GetSupportedRenderers*(max: uint8_t; enm: ptr RendererType): uint8_t {.BGFXImport, importc: "bgfx_get_supported_renderers".}
+proc ImageSwizzleBgra8*(dst: pointer; width: uint32_t; height: uint32_t; pitch: uint32_t; src: pointer) {.BGFXImport, importc: "bgfx_image_swizzle_bgra8".}
+proc ImageRgba8Downsample2x2*(dst: pointer; width: uint32_t; height: uint32_t; pitch: uint32_t; src: pointer) {.BGFXImport, importc: "bgfx_image_rgba8_downsample_2x2".}
+proc GetSupportedRenderers*(max: uint8_t = 0; enm: ptr RendererType = nil): uint8_t {.BGFXImport, importc: "bgfx_get_supported_renderers".}
 proc GetRendererName*(typ: RendererType): cstring {.BGFXImport, importc: "bgfx_get_renderer_name".}
 proc Init*(typ: RendererType = RendererType_Count; vendorId: uint16_t = BGFX_PCI_ID_NONE; deviceId: uint16_t = 0; callback: ptr CallbackI = nil; allocator: pointer = nil): bool {.BGFXImport, discardable, importc: "bgfx_init".}
 proc Shutdown*() {.BGFXImport, importc: "bgfx_shutdown".}
@@ -451,10 +463,9 @@ proc CreateDynamicVertexBuffer*(num: uint32_t; decl: ptr VertexDecl; flags: uint
 proc CreateDynamicVertexBuffer*(mem: ptr Memory; decl: ptr VertexDecl; flags: uint16_t = BGFX_BUFFER_NONE): DynamicVertexBufferHandle {.BGFXImport, importc: "bgfx_create_dynamic_vertex_buffer_mem".}
 proc UpdateDynamicVertexBuffer*(handle: DynamicVertexBufferHandle; startVertex: uint32_t; mem: ptr Memory) {.BGFXImport, importc: "bgfx_update_dynamic_vertex_buffer".}
 proc DestroyDynamicVertexBuffer*(handle: DynamicVertexBufferHandle) {.BGFXImport, importc: "bgfx_destroy_dynamic_vertex_buffer".}
-proc CheckAvailTransientIndexBuffer*(num: uint32_t): bool {.BGFXImport, importc: "bgfx_check_avail_transient_index_buffer".}
-proc CheckAvailTransientVertexBuffer*(num: uint32_t;decl: ptr VertexDecl): bool {.BGFXImport, importc: "bgfx_check_avail_transient_vertex_buffer".}
-proc CheckAvailInstanceDataBuffer*(num: uint32_t; stride: uint16_t): bool {.BGFXImport, importc: "bgfx_check_avail_instance_data_buffer".}
-proc CheckAvailTransientBuffers*(numVertices: uint32_t; decl: ptr VertexDecl; numIndices: uint32_t): bool {.BGFXImport, importc: "bgfx_check_avail_transient_buffers".}
+proc GetAvailTransientIndexBuffer*(num: uint32_t): uint32_t {.BGFXImport, importc: "bgfx_get_avail_transient_index_buffer".}
+proc GetAvailTransientVertexBuffer*(num: uint32_t;decl: ptr VertexDecl): uint32_t {.BGFXImport, importc: "bgfx_get_avail_transient_vertex_buffer".}
+proc GetAvailInstanceDataBuffer*(num: uint32_t; stride: uint16_t): uint32_t {.BGFXImport, importc: "bgfx_get_avail_instance_data_buffer".}
 proc AllocTransientIndexBuffer*(tib: ptr TransientIndexBuffer; num: uint32_t) {.BGFXImport, importc: "bgfx_alloc_transient_index_buffer".}
 proc AllocTransientVertexBuffer*(tvb: ptr TransientVertexBuffer; num: uint32_t; decl: ptr VertexDecl) {.BGFXImport, importc: "bgfx_alloc_transient_vertex_buffer".}
 proc AllocTransientBuffers*(tvb: ptr TransientVertexBuffer; decl: ptr VertexDecl; numVertices: uint32_t; tib: ptr TransientIndexBuffer; numIndices: uint32_t): bool {.BGFXImport, importc: "bgfx_alloc_transient_buffers".}
@@ -467,6 +478,7 @@ proc DestroyShader*(handle: ShaderHandle) {.BGFXImport, importc: "bgfx_destroy_s
 proc CreateProgram*(vsh: ShaderHandle; fsh: ShaderHandle; destroyShaders: bool = false): ProgramHandle {.BGFXImport, importc: "bgfx_create_program".}
 proc CreateProgram*(csh: ShaderHandle; destroyShaders: bool = false): ProgramHandle {.BGFXImport, importc: "bgfx_create_compute_program".}
 proc DestroyProgram*(handle: ProgramHandle) {.BGFXImport, importc: "bgfx_destroy_program".}
+proc IsTextureValid*(depth: uint16_t, cubeMap: bool, numLayers: uint16_t, format: TextureFormat, flags: uint32_t): bool {.BGFXImport, importc: "bgfx_is_texture_valid".}
 proc CalcTextureSize*(info: ptr TextureInfo; width: uint16_t; height: uint16_t; depth: uint16_t; cubeMap: bool; hasMips: bool; numLayers: uint16_t; format: TextureFormat) {.BGFXImport, importc: "bgfx_calc_texture_size".}
 proc CreateTexture*(mem: ptr Memory; flags: uint32_t = BGFX_TEXTURE_NONE; skip: uint8_t = 0; info: ptr TextureInfo = nil): TextureHandle {.BGFXImport, importc: "bgfx_create_texture".}
 proc CreateTexture2d*(width: uint16_t; height: uint16_t; hasMips: bool; numLayers: uint16_t; format: TextureFormat; flags: uint32_t = BGFX_TEXTURE_NONE; mem: ptr Memory = nil): TextureHandle {.BGFXImport, importc: "bgfx_create_texture_2d".}
@@ -476,8 +488,8 @@ proc CreateTextureCube*(size: uint16_t; hasMips: bool; numLayers: uint16_t; form
 proc UpdateTexture2d*(handle: TextureHandle; layer: uint16_t; mip: uint8_t; x: uint16_t; y: uint16_t; width: uint16_t; height: uint16_t; mem: ptr Memory; pitch: uint16_t = uint16.high) {.BGFXImport, importc: "bgfx_update_texture_2d".}
 proc UpdateTexture3d*(handle: TextureHandle; mip: uint8_t; x: uint16_t; y: uint16_t; z: uint16_t; width: uint16_t; height: uint16_t; depth: uint16_t; mem: ptr Memory) {.BGFXImport, importc: "bgfx_update_texture_3d".}
 proc UpdateTextureCube*(handle: TextureHandle; layer: uint16_t; side: uint8_t; mip: uint8_t; x: uint16_t; y: uint16_t; width: uint16_t; height: uint16_t; mem: ptr Memory; pitch: uint16_t = uint16.high) {.BGFXImport, importc: "bgfx_update_texture_cube".}
-proc ReadTexture*(handle: TextureHandle; data: pointer): uint32_t {.BGFXImport, importc: "bgfx_read_texture".}
-proc ReadTexture*(handle: FrameBufferHandle; attachment: uint8_t; data: pointer): uint32_t {.BGFXImport, importc: "bgfx_read_frame_buffer".}
+proc ReadTexture*(handle: TextureHandle; data: pointer, mip: uint8_t = 0): uint32_t {.BGFXImport, importc: "bgfx_read_texture".}
+proc GetTexture*(handle: FrameBufferHandle; attachment: uint8_t): TextureHandle {.BGFXImport, importc: "bgfx_get_texture".}
 proc DestroyTexture*(handle: TextureHandle) {.BGFXImport, importc: "bgfx_destroy_texture".}
 proc CreateFrameBuffer*(width: uint16_t; height: uint16_t; format: TextureFormat; textureFlags: uint32_t = BGFX_TEXTURE_U_CLAMP or BGFX_TEXTURE_V_CLAMP): FrameBufferHandle {.BGFXImport, importc: "bgfx_create_frame_buffer".}
 proc CreateFrameBuffer*(ratio: BackbufferRatio; format: TextureFormat; textureFlags: uint32_t = BGFX_TEXTURE_U_CLAMP or BGFX_TEXTURE_V_CLAMP): FrameBufferHandle {.BGFXImport, importc: "bgfx_create_frame_buffer_scaled".}
@@ -486,6 +498,7 @@ proc CreateFrameBuffer*(num: uint8_t; attachment: ptr Attachment; destroyTexture
 proc CreateFrameBuffer*(nwh: pointer; width: uint16_t; height: uint16_t; depthFormat: TextureFormat = TextureFormat_Unknown): FrameBufferHandle {.BGFXImport, importc: "bgfx_create_frame_buffer_from_nwh".}
 proc DestroyFrameBuffer*(handle: FrameBufferHandle) {.BGFXImport, importc: "bgfx_destroy_frame_buffer".}
 proc CreateUniform*(name: cstring; typ: UniformType; num: uint16_t = 1): UniformHandle {.BGFXImport, importc: "bgfx_create_uniform".}
+proc GetUniformInfo*(handle: UniformHandle, info: ptr UniformInfo) {.BGFXImport, importc: "bgfx_get_uniform_info".}
 proc DestroyUniform*(handle: UniformHandle) {.BGFXImport, importc: "bgfx_destroy_uniform".}
 proc CreateOcclusionQuery*(): OcclusionQueryHandle {.BGFXImport, importc: "bgfx_create_occlusion_query".}
 proc GetResult*(handle: OcclusionQueryHandle): OcclusionQueryResult {.BGFXImport, importc: "bgfx_get_result".}
@@ -508,7 +521,7 @@ proc SetViewClear*(id: uint8_t; flags: uint16_t; depth: cfloat; stencil: uint8_t
 proc SetViewSeq*(id: uint8_t; enabled: bool) {.BGFXImport, importc: "bgfx_set_view_seq".}
 proc SetViewFrameBuffer*(id: uint8_t; handle: FrameBufferHandle) {.BGFXImport, importc: "bgfx_set_view_frame_buffer".}
 proc SetViewTransform*(id: uint8_t; view: pointer; projL: pointer;flags: uint8_t = BGFX_VIEW_STEREO; projR: pointer = nil) {.BGFXImport, importc: "bgfx_set_view_transform_stereo".}
-proc SetViewRemap*(id: uint8_t = 0; num: uint8_t = uint8.high; remap: pointer = nil) {.BGFXImport, importc: "bgfx_set_view_remap".}
+proc SetViewOrder*(id: uint8_t = 0; num: uint8_t = uint8.high; remap: pointer = nil) {.BGFXImport, importc: "bgfx_set_view_order".}
 proc ResetView*(id: uint8_t) {.BGFXImport, importc: "bgfx_reset_view".}
 proc SetMarker*(marker: cstring) {.BGFXImport, importc: "bgfx_set_marker".}
 proc SetState*(state: uint64_t; rgba: uint32_t = 0) {.BGFXImport, importc: "bgfx_set_state".}
@@ -529,14 +542,12 @@ proc SetVertexBuffer*(tvb: ptr TransientVertexBuffer; startVertex: uint32_t = 0;
 proc SetInstanceDataBuffer*(idb: ptr InstanceDataBuffer; num: uint32_t = uint32.high) {.BGFXImport, importc: "bgfx_set_instance_data_buffer".}
 proc SetInstanceDataBuffer*(handle: VertexBufferHandle; startVertex: uint32_t; num: uint32_t) {.BGFXImport, importc: "bgfx_set_instance_data_from_vertex_buffer".}
 proc SetInstanceDataBuffer*(handle: DynamicVertexBufferHandle; startVertex: uint32_t;num: uint32_t) {.BGFXImport, importc: "bgfx_set_instance_data_from_dynamic_vertex_buffer".}
-proc SetTexture*(stage: uint8_t; sampler: UniformHandle;handle: TextureHandle; flags: uint32_t = uint32.high) {.BGFXImport, importc: "bgfx_set_texture".}
-proc SetTexture*(stage: uint8_t;sampler: UniformHandle;handle: FrameBufferHandle;attachment: uint8_t = 0; flags: uint32_t = uint32.high) {.BGFXImport, importc: "bgfx_set_texture_from_frame_buffer".}
+proc SetTexture*(stage: uint8_t; sampler: UniformHandle; handle: TextureHandle; flags: uint32_t = uint32.high) {.BGFXImport, importc: "bgfx_set_texture".}
 proc Touch*(id: uint8_t): uint32_t {.BGFXImport, discardable, importc: "bgfx_touch".}
 proc Submit*(id: uint8_t; handle: ProgramHandle; depth: int32_t = 0;preserveState: bool = false): uint32_t {.BGFXImport, discardable, importc: "bgfx_submit".}
 proc Submit*(id: uint8_t; program: ProgramHandle;occlusionQuery: OcclusionQueryHandle; depth: int32_t = 0;preserveState: bool = false): uint32_t {.BGFXImport, discardable, importc: "bgfx_submit_occlusion_query".}
 proc Submit*(id: uint8_t; handle: ProgramHandle;indirectHandle: IndirectBufferHandle;start: uint16_t = 0; num: uint16_t = 1; depth: int32_t = 0;preserveState: bool = false): uint32_t {.BGFXImport, discardable, importc: "bgfx_submit_indirect".}
 proc SetImage*(stage: uint8_t; sampler: UniformHandle;handle: TextureHandle; mip: uint8_t;access: Access; format: TextureFormat = TextureFormat_Count) {.BGFXImport, importc: "bgfx_set_image".}
-proc SetImage*(stage: uint8_t;sampler: UniformHandle;handle: FrameBufferHandle;attachment: uint8_t;access: Access;format: TextureFormat = TextureFormat_Count) {.BGFXImport, importc: "bgfx_set_image_from_frame_buffer".}
 proc SetBuffer*(stage: uint8_t;handle: IndexBufferHandle;access: Access) {.BGFXImport, importc: "bgfx_set_compute_index_buffer".}
 proc SetBuffer*(stage: uint8_t;handle: VertexBufferHandle;access: Access) {.BGFXImport, importc: "bgfx_set_compute_vertex_buffer".}
 proc SetBuffer*(stage: uint8_t;handle: DynamicIndexBufferHandle; access: Access) {.BGFXImport, importc: "bgfx_set_compute_dynamic_index_buffer".}
@@ -546,5 +557,4 @@ proc Dispatch*(id: uint8_t; handle: ProgramHandle; numX: uint16_t = 1; numY: uin
 proc Dispatch*(id: uint8_t; handle: ProgramHandle;indirectHandle: IndirectBufferHandle;start: uint16_t = 0; num: uint16_t = 1; flags: uint8_t = BGFX_SUBMIT_EYE_FIRST): uint32_t {.BGFXImport, importc: "bgfx_dispatch_indirect".}
 proc Discard*() {.BGFXImport, importc: "bgfx_discard".}
 proc Blit*(id: uint8_t; dst: TextureHandle; dstMip: uint8_t;dstX: uint16_t; dstY: uint16_t; dstZ: uint16_t;src: TextureHandle; srcMip: uint8_t; srcX: uint16_t = 0;srcY: uint16_t = 0; srcZ: uint16_t; width: uint16_t = uint16.high; height: uint16_t = uint16.high;depth: uint16_t = uint16.high) {.BGFXImport, importc: "bgfx_blit".}
-proc Blit*(id: uint8_t; dst: TextureHandle; dstMip: uint8_t; dstX: uint16_t; dstY: uint16_t; dstZ: uint16_t; src: FrameBufferHandle; attachment: uint8_t = 0; srcMip: uint8_t = 0; srcX: uint16_t = 0; srcY: uint16_t = 0; srcZ: uint16_t = 0; width: uint16_t = uint16.high; height: uint16_t = uint16.high; depth: uint16_t = uint16.high) {.BGFXImport, importc: "bgfx_blit_frame_buffer".}
 proc SaveScreenShot*(filePath: cstring) {.BGFXImport, importc: "bgfx_save_screen_shot".}

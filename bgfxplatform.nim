@@ -1,4 +1,4 @@
-# Copyright 2016 Cory Noll Crimmins - Golden
+# Copyright 2017 Cory Noll Crimmins - Golden
 # License: BSD-2
 # Wrapper/binding for bgfx platform
 
@@ -33,6 +33,7 @@ type PlatformData* {.importc: "bgfx_platform_data_t", header: "<bgfx/c99/platfor
     context* {.importc: "context".}: pointer
     backBuffer* {.importc: "backBuffer".}: pointer
     backBufferDS* {.importc: "backBufferDS".}: pointer
+    session* {.importc: "session"}: pointer
 
 proc SetPlatformData*(data: ptr PlatformData) {.BGFXImport, importc: "bgfx_set_platform_data".}
 

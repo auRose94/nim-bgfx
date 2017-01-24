@@ -1,4 +1,4 @@
-# Copyright 2016 Cory Noll Crimmins - Golden
+# Copyright 2017 Cory Noll Crimmins - Golden
 # License: BSD-2
 # Port for bgfx utilities
 
