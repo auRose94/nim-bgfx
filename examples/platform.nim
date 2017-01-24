@@ -4,7 +4,6 @@
 
 {.deadCodeElim: on.}
 
-import locks
 import glfw3 as glfw
 import bgfx, bgfxplatform
 import strutils
@@ -47,13 +46,8 @@ proc LinkGLFW3WithBGFX(window: Window) =
     pd.context = nil
     SetPlatformData(pd)
 
-var ExampleLock*: Lock
-
 proc StartExample*[Example]() =
-    var app: ptr Example = createShared(Example)
-    app[] = Example()
-    initLock(ExampleLock)
-    assert(not app.isNil)
+    var app: Example = Example()
 
     # Set up
     discard glfw.SetErrorCallback(GLFWErrorCB)
@@ -64,53 +58,34 @@ proc StartExample*[Example]() =
 
     glfw.WindowHint(glfw.CLIENT_API, glfw.NO_API)
     var window: Window
-    window = glfw.CreateWindow(1280, 720, "Cubes", nil, nil)
+    window = glfw.CreateWindow(1280, 720, "", nil, nil)
     if window == nil:
         echo "[GLFW3] Failed to create window!"
         quit(QuitFailure)
-    glfw.SetWindowUserPointer(window, app)
+    glfw.SetWindowUserPointer(window, app.addr)
 
     LinkGLFW3WithBGFX(window)
 
-    var appThread: Thread[ptr Example]
+    app.Init()
 
-    proc appProc(app: ptr Example) {.thread.} =
-        # Launch
-        app.Init()
-
-        # Update
-        while true:
-            {.locks: [ExampleLock].}:
-                if not app.m_Updated:
-                    if app.m_BGFXNeedsToReset:
-                        bgfx.Reset(cast[uint16](app.m_width), cast[uint16](app.m_height), app.m_reset)
-                        app.m_BGFXNeedsToReset = false
-                    app.Update()
-                    app.m_Updated = true
-                    if app.m_WindowIsClosing:
-                        break
-        #We are done
-        app.CleanUp()
-
-    createThread(appThread, appProc, app)
-
-    while appThread.running:
-        bgfxplatform.RenderFrame()
-
-        # Do events on main thread and let aux know about them
+    while true:
         glfw.PollEvents()
-        {.locks: [ExampleLock].}:
-            if app.m_Updated:
-                var current_width, current_height: cint
-                glfw.GetFramebufferSize(window, current_width.addr, current_height.addr)
-                if cast[uint32](current_width) != app.m_width or cast[uint32](current_height) != app.m_height:
-                    echo "Window resize: ($1, $2)".format(current_width, current_height)
-                    app.m_width = cast[uint32](current_width)
-                    app.m_height = cast[uint32](current_height)
-                    app.m_BGFXNeedsToReset = true
-                if glfw.WindowShouldClose(window) != 0:
-                    app.m_WindowIsClosing = true
-                app.m_Updated = false
+        var current_width, current_height: cint
+        var current_window_width, current_window_height: cint
+        glfw.GetFramebufferSize(window, current_width.addr, current_height.addr)
+        glfw.GetWindowSize(window, current_window_width.addr, current_window_height.addr)
+        if cast[uint32](current_width) != app.m_width or cast[uint32](current_height) != app.m_height:
+            echo "Window resize: ($1, $2)".format(current_width, current_height)
+            app.m_width = cast[uint32](current_width)
+            app.m_height = cast[uint32](current_height)
+            app.m_window_width = cast[uint32](current_window_width)
+            app.m_window_height = cast[uint32](current_window_height)
+            bgfx.Reset(cast[uint16](app.m_window_width), cast[uint16](app.m_window_height), app.m_reset)
+        if glfw.WindowShouldClose(window) != 0:
+            break
+        app.Update()
+
+    app.CleanUp()
 
     glfw.DestroyWindow(window)
     glfw.Terminate()

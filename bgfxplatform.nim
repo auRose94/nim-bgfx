@@ -14,7 +14,7 @@ when defined(BGFX_SHARED_LIB_API):
     else:
         raise newException("Unsupported platform, need lib names")
 else:
-    {.pragma: BGFXImport, header: "<bgfx/c99/bgfxplatform.h>", cdecl.}
+    {.pragma: BGFXImport, header: "<bgfx/c99/platform.h>", cdecl.}
 
 import defines, bgfx
 export defines
@@ -27,7 +27,7 @@ type RenderFrameEnum* = enum
 
 proc RenderFrame*(): RenderFrameEnum {.BGFXImport, discardable, importc: "bgfx_render_frame".}
 
-type PlatformData* {.importc: "bgfx_platform_data_t", header: "<bgfx/c99/bgfxplatform.h>".} = object
+type PlatformData* {.importc: "bgfx_platform_data_t", header: "<bgfx/c99/platform.h>".} = object
     ndt* {.importc: "ndt".}: pointer
     nwh* {.importc: "nwh".}: pointer
     context* {.importc: "context".}: pointer
@@ -36,7 +36,7 @@ type PlatformData* {.importc: "bgfx_platform_data_t", header: "<bgfx/c99/bgfxpla
 
 proc SetPlatformData*(data: ptr PlatformData) {.BGFXImport, importc: "bgfx_set_platform_data".}
 
-type InternalData* {.importc: "bgfx_internal_data_t", header: "<bgfx/c99/bgfxplatform.h>".} = object
+type InternalData* {.importc: "bgfx_internal_data_t", header: "<bgfx/c99/platform.h>".} = object
     caps* {.importc: "caps".}: ptr Caps
     context* {.importc: "context".}: pointer
 

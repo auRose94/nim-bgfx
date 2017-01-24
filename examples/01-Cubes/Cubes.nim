@@ -13,11 +13,10 @@ import os
 type ExampleCubes = ref object
     m_width*: uint32
     m_height*: uint32
+    m_window_width*: uint32
+    m_window_height*: uint32
     m_debug*: uint32
     m_reset*: uint32
-    m_WindowIsClosing*: bool
-    m_BGFXNeedsToReset*: bool
-    m_Updated*: bool
     m_vbh*: bgfx.VertexBufferHandle
     m_ibh*: bgfx.IndexBufferHandle
     m_program*: bgfx.ProgramHandle
@@ -28,7 +27,7 @@ type PosColorVertex {.packed, pure.} = object
 
 var s_cubeVertices_Decl: ptr bgfx.VertexDecl
 
-proc Init(self: ptr ExampleCubes) {.thread.} =
+proc Init(self: ExampleCubes) =
 
     var m_renderer_type = bgfx.RendererType.RendererType_Count
     var m_pciID = 0'u16
@@ -37,8 +36,6 @@ proc Init(self: ptr ExampleCubes) {.thread.} =
     self.m_height = 1280
     self.m_debug = BGFX_DEBUG_TEXT #or BGFX_DEBUG_STATS
     self.m_reset = 0'u32 #BGFX_RESET_VSYNC
-    self.m_WindowIsClosing = false
-    self.m_BGFXNeedsToReset = false
 
     #Seperate Thread
     bgfx.Init(m_renderer_type, m_pciID, 0, nil, nil)
@@ -91,10 +88,10 @@ proc Init(self: ptr ExampleCubes) {.thread.} =
 
     self.m_program = LoadProgram("vs_cubes", "fs_cubes")
 
-proc CleanUp(self: ptr ExampleCubes) {.thread.} =
+proc CleanUp(self: ExampleCubes) =
     bgfx.Shutdown()
 
-proc Update(self: ptr ExampleCubes) {.thread.} =
+proc Update(self: ExampleCubes) =
     # Set view 0 default viewport
     bgfx.SetViewRect(0, 0, 0, cast[uint16](self.m_width), cast[uint16](self.m_height))
 
@@ -125,10 +122,10 @@ proc Update(self: ptr ExampleCubes) {.thread.} =
         var view: Mat4
         fpumath.mtxLookAt(view, eye, at)
         var proj: Mat4
-        fpumath.mtxProj(proj, 60.0'f32, cast[float32](self.m_width)/cast[float32](self.m_height), 0.1'f32, 100.0'f32)
+        fpumath.mtxProj(proj, 60.0'f32, cast[float32](self.m_window_width)/cast[float32](self.m_window_height), 0.1'f32, 100.0'f32)
         bgfx.SetViewTransform(0, unsafeAddr(view[0]), unsafeAddr(proj[0]))
 
-        bgfx.SetViewRect(0, 0, 0, cast[uint16](self.m_width), cast[uint16](self.m_height))
+        bgfx.SetViewRect(0, 0, 0, cast[uint16](self.m_window_width), cast[uint16](self.m_window_height))
 
     bgfx.Touch(0)
 

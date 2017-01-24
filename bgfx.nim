@@ -391,7 +391,7 @@ type VertexDecl* {.importc: "bgfx_vertex_decl_t", header: "<bgfx/c99/bgfx.h>".} 
     offset* {.importc: "offset".}: array[Attrib_Count, uint16_t]
     attributes* {.importc: "attributes".}: array[Attrib_Count, uint16_t]
 
-proc Begin*(decl: ptr VertexDecl, renderer: RendererType = RendererType_Null) {.BGFXImport, importc: "bgfx_vertex_decl_begin".}
+proc Begin*(decl: ptr VertexDecl, renderer: RendererType = RendererType_Noop) {.BGFXImport, importc: "bgfx_vertex_decl_begin".}
 proc End*(decl: ptr VertexDecl) {.BGFXImport, importc: "bgfx_vertex_decl_end".}
 proc Add*(decl: ptr VertexDecl, attrib: Attrib; num: uint8_t; typ: AttribType; normalized: bool = false; asInt: bool = false) {.BGFXImport, importc: "bgfx_vertex_decl_add".}
 proc Skip*(decl: ptr VertexDecl, num: uint8_t) {.BGFXImport, importc: "bgfx_vertex_decl_skip".}

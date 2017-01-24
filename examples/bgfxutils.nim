@@ -27,11 +27,13 @@ proc LoadShader*(name: string): bgfx.ShaderHandle =
         path &= "shaders/gles/"
     of bgfx.RendererType_Metal:
         path &= "shaders/metal/"
+    of bgfx.RendererType_Gnm:
+        path &= "shaders/gnm/"
     of bgfx.RendererType_Vulkan:
         path &= "shaders/vk/" # I'm guessing
     of bgfx.RendererType_Direct3D9:
         path &= "shaders/dx9/"
-    of RendererType_Null, RendererType_Count:
+    of RendererType_Noop, RendererType_Count:
         raise newException(SystemError, "Invalid bgfx renderer type")
     path &= name & ".bin"
     return bgfx.CreateShader(LoadMemory(path))
