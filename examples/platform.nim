@@ -37,8 +37,8 @@ proc LinkGLFW3WithBGFX(window: Window) =
         defined(NetBSD) or
         defined(Solaris) or
         defined(QNX):
-        pd.nwh = glfwn.GetX11Window(window)
-        pd.ndt = glfwn.GetX11Display(window)
+        pd.nwh = cast[pointer](glfwn.GetX11Window(window))
+        pd.ndt = glfwn.GetX11Display()
     else:
         {.fatal: "Exposure of glfw3native functions is required".}
     pd.backBuffer = nil
