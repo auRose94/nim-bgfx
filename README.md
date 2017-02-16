@@ -2,7 +2,7 @@
 > [bgfx](https://github.com/bkaradzic/bgfx) graphics library binding and wrapper for the nim programming language.    [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=96STXBG8HMW2E)
 
 [bgfx](https://github.com/bkaradzic/bgfx) is a rendering library that has a variety of graphics backends supported and a bunch of other neat features.
-  * Supported backends; Direct3D 9, Direct3D 11, Direct3D 12 (WIP), Metal (WIP), OpenGL 2.1, OpenGL 3.1+, OpenGL ES 2, OpenGL ES 3.1, WebGL 1.0, and WebGL 2.0
+  * Supported backends; Direct3D 9, Direct3D 11, Direct3D 12 (WIP), Metal (WIP), Vulkan(WIP) OpenGL 2.1, OpenGL 3.1+, OpenGL ES 2, OpenGL ES 3.1, WebGL 1.0, and WebGL 2.0
   * Other features include occlusion querying, compute shader programs, draw and compute bucket sorting, conversion to compressed formats, and more.
 
 bgfx's original and primary maintainer is [Branimir Karadzic](https://github.com/bkaradzic).
@@ -13,19 +13,15 @@ You may contact me([Cory](https://github.com/Halsys)), if you ever face a proble
 
 ## Notes:
   1. This needs to be beta tested, but is known to work(examples included).
-  2. This package is missing some convenience methods and objects that might be found in other libs.
-  3. All types and functions are available but are mapped to match the C and C++ equivalents and should work.
-  4. Constants and preprocessor functions from C have been ported but should work as expected (see **bgfx/constants.nim**)
-  5. Should work on all platforms provided that the **.dll**, **.so**, or **.dylib** is available with your program
-  6. Because the bgfx library was programmed with specific types in mind **(i.e. uint8/16/32/64_t and float)**;
-    * You have to be incredibly specific because of nims type system (**42'u16**, **100'i32**, **1.0'f32**)
-    * The C++ style methods and functions help with this.
-  7. There might be a incompatibility with nims garbage collection system.
-  8. This package does include nim examples.
-  9. This package has the same license as bgfx... for your information.
-  10. You are free to send improvements but you should;
+  2. This package has all of the C functions, macros, and types
+  3. Compiles bgfx right out of the box (provided it is supported).
+  4. Because the bgfx library was programmed with specific types in mind **(i.e. uint8/16/32/64_t and float)**. You have to be incredibly specific because of nims type system (**42'u16**, **100'i32**, **1.0'f32**)
+  5. This package does include nim examples.
+  6. This package has the same license as bgfx... for your information.
+  7. You are free to send improvements but you should;
     * Make sure it matches how things operate on the C++ or C of the library.
     * Make sure that the code is readable.
-    * Note that there is no need to include documentation. (Unless necessary)
-    * Make sure it works on the latest stable version of nim.
-  11. Only [nimrod-glfw](https://github.com/Halsys/nimrod-glfw) is known to hook up correctly with this because it is the only one supplying platform functions.
+    * Documentation is optional, but would be nice.
+    * Make sure it works on the latest version of nim.
+  8. Currently two window managing libraries work with this package [nimrod-glfw](https://github.com/rafaelvasco/nimrod-glfw) and [sdl2_nim](https://github.com/Vladar4/sdl2_nim) (with varying results).
+  9. Compiling bgfx has been so far tested on Linux... untested on other platforms.
