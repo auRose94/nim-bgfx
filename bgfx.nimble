@@ -1,5 +1,5 @@
 # Package
-version = "0.1.4"
+version = "0.1.6"
 author = "Cory Noll Crimmins - Golden"
 description = "BGFX wrapper for the nim programming language."
 license = "BSD"
