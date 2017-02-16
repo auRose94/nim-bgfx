@@ -23,5 +23,5 @@ You may contact me([Cory](https://github.com/Halsys)), if you ever face a proble
     * Make sure that the code is readable.
     * Documentation is optional, but would be nice.
     * Make sure it works on the latest version of nim.
-  8. Currently two window managing libraries work with this package [nimrod-glfw](https://github.com/rafaelvasco/nimrod-glfw) and [sdl2_nim](https://github.com/Vladar4/sdl2_nim) (with varying results).
+  8. Currently two window managing libraries work with this package; [nimrod-glfw](https://github.com/rafaelvasco/nimrod-glfw) and [sdl2_nim](https://github.com/Vladar4/sdl2_nim) (with varying results).
   9. Compiling bgfx has been so far tested on Linux... untested on other platforms.
