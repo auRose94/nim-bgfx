@@ -58,12 +58,15 @@ elif defined(BGFX_DYNAMIC_LIB):
         raise newException("Unsupported platform")
 elif defined(BGFX_BUILD_LIB) or not defined(BGFX_DYNAMIC_LIB) or not defined(BGFX_SHARED_LIB) and not defined(macosx):
     {.compile: "bx_amalgamated.cpp".}
-    {.compile: "bgfx_amalgamated.cpp".}
+    when defined(macosx):
+        {.compile: "bgfx_amalgamated.mm".}
+    else:
+        {.compile: "bgfx_amalgamated.cpp".}
     when defined(release):
         {.passC: "-DNDEBUG".}
     else:
         {.passC: "-D_DEBUG -DBGFX_CONFIG_DEBUG=1".}
-    {.passC: "-std=c++11 -I/usr/local/include -DBX_CONFIG_ENABLE_MSVC_LEVEL4_WARNINGS=1 -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS".}
+    {.passC: "-I/usr/local/include -DBX_CONFIG_ENABLE_MSVC_LEVEL4_WARNINGS=1 -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS".}
     {.passL: "-lstdc++".} 
     when defined(linux):
         {.passL: "-lrt -ldl -lX11 -lGL -lpthread".}

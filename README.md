@@ -24,8 +24,7 @@ You may contact me([Cory](https://github.com/Halsys)), if you ever face a proble
     * Documentation is optional, but would be nice.
     * Make sure it works on the latest version of nim.
   8. Currently two window managing libraries work with this package; [nimrod-glfw](https://github.com/rafaelvasco/nimrod-glfw) and [sdl2_nim](https://github.com/Vladar4/sdl2_nim) (with varying results).
-  9. Compiling bgfx so far works on Linux... maybe untested on other platforms.
-  10. Building bgfx on OSX is unsupported due to objcpp incompatibility with nim(use BGFX_DYNAMIC_LIB or BGFX_SHARED_LIB define flags instead)
-  11. Building bgfx on Windows is untested.
-  12. Building bgfx in Javascript is untested.
-  13. Works on amd64, untested on other architechures.
+  9. Compiling bgfx so far works on Linux and OSX... maybe untested on other platforms.
+  10. Building bgfx on Windows is untested.
+  11. Building bgfx in Javascript is untested.
+  12. Works on amd64, untested on other architechures.
