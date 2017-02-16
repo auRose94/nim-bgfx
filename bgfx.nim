@@ -69,10 +69,12 @@ elif defined(BGFX_BUILD_LIB) or not defined(BGFX_DYNAMIC_LIB) or not defined(BGF
     {.passC: "-I/usr/local/include -DBX_CONFIG_ENABLE_MSVC_LEVEL4_WARNINGS=1 -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS".}
     {.passL: "-lstdc++".} 
     when defined(linux):
+        {.passC: "-std=c++11".} 
         {.passL: "-lrt -ldl -lX11 -lGL -lpthread".}
     elif defined(macosx):
         {.passL: "-framework Cocoa -framework QuartzCore -framework OpenGL -weak_framework Metal -weak_framework MetalKit".}   
     elif defined(windows):
+        {.passC: "-std=c++11".} 
         {.passL: "-lgdi32 -lpsapi".}
     {.pragma: BGFXImport, cdecl.}  
 else:
