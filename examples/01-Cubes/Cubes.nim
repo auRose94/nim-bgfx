@@ -3,10 +3,12 @@
 # Port of bgfx cubes example 01 to nim and nim-bgfx
 
 import bgfx
-import ../bgfxutils
-import ../fpumath
-import ../platform
-import glfw3 as glfw
+import ../bgfx_utils
+import ../fpu_math
+when defined(useSDL):
+    import ../sdl_platform
+elif defined(useGLFW) or not defined(useSDL):
+    import ../glfw_platform
 import parseopt2
 import os
 
@@ -27,17 +29,17 @@ type PosColorVertex {.packed, pure.} = object
 
 var s_cubeVertices_Decl: ptr bgfx.VertexDecl
 
-proc Init(self: ExampleCubes) =
+proc Start(self: ExampleCubes) =
 
     var m_renderer_type = bgfx.RendererType.RendererType_Count
     var m_pciID = 0'u16
 
     self.m_width = 1280
     self.m_height = 1280
-    self.m_debug = BGFX_DEBUG_TEXT #or BGFX_DEBUG_STATS
-    self.m_reset = 0'u32 #BGFX_RESET_VSYNC
+    self.m_debug = BGFX_DEBUG_TEXT # or BGFX_DEBUG_STATS
+    self.m_reset = 0'u32 # BGFX_RESET_VSYNC
 
-    #Seperate Thread
+    # Seperate Thread
     bgfx.Init(m_renderer_type, m_pciID, 0, nil, nil)
     bgfx.Reset(self.m_width, self.m_height, self.m_reset)
 
@@ -53,7 +55,7 @@ proc Init(self: ExampleCubes) =
     s_cubeVertices_Decl.Add(bgfx.Attrib_Color0, 4, bgfx.AttribType_Uint8, true)
     s_cubeVertices_Decl.End()
 
-    var vertexmem: ptr bgfx.Memory = bgfx.Alloc(cast[uint32](sizeof(PosColorVertex) * 8))
+    var vertexmem: ptr bgfx.Memory = bgfx.Alloc(cast[uint32_t](sizeof(PosColorVertex) * 8))
     var vertexdata = [
         PosColorVertex(x: -1.0'f32, y:  1.0'f32, z:  1.0'f32, abgr: 0xff000000'u32 ),
         PosColorVertex(x:  1.0'f32, y:  1.0'f32, z:  1.0'f32, abgr: 0xff0000ff'u32 ),
@@ -66,7 +68,7 @@ proc Init(self: ExampleCubes) =
     ]
     copyMem(vertexmem.data, unsafeAddr(vertexdata[0]), sizeof(PosColorVertex) * 8)
 
-    var indexmem: ptr bgfx.Memory = bgfx.Alloc(cast[uint32](sizeof(uint16) * 36))
+    var indexmem: ptr bgfx.Memory = bgfx.Alloc(cast[uint32_t](sizeof(uint16) * 36))
     var indexdata = [
         0'u16, 1'u16, 2'u16, ## 0
         1'u16, 3'u16, 2'u16,
@@ -95,10 +97,10 @@ proc Update(self: ExampleCubes) =
     # Set view 0 default viewport
     bgfx.SetViewRect(0, 0, 0, cast[uint16](self.m_width), cast[uint16](self.m_height))
 
-    var now = glfw.GetTime()
-    var last {.global.} = glfw.GetTime()
+    var now = GetTime()
+    var last {.global.} = GetTime()
     let frameTime: float32 = now - last
-    let time = glfw.GetTime()
+    let time = GetTime()
     last = now
     var toMs = 1000.0'f32
 

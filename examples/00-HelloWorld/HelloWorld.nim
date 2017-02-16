@@ -3,14 +3,15 @@
 # Port of bgfx helloworld example 00 to nim and nim-bgfx
 
 import bgfx
-import bgfxplatform
-import glfw3 as glfw
-import ../platform
+when defined(useSDL):
+    import ../sdl_platform
+elif defined(useGLFW) or not defined(useSDL):
+    import ../glfw_platform
 import parseopt2
 import strutils
 import locks
 import os
-include logo
+include Logo
 
 proc `/`(x, y: uint16): uint16 =
     x div y
@@ -23,7 +24,7 @@ type ExampleHelloWorld = ref object
     m_debug*: uint32
     m_reset*: uint32
 
-proc Init(self: ExampleHelloWorld) =
+proc Start(self: ExampleHelloWorld) =
 
     var m_renderer_type = bgfx.RendererType.RendererType_Count
     var m_pciID = 0'u16
