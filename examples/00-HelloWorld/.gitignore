@@ -3,5 +3,7 @@
 *.dll
 *.bak
 *.so
+*.a
 *.dylib
+*.so.*
 HelloWorld

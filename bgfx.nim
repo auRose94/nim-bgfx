@@ -57,14 +57,8 @@ elif defined(BGFX_DYNAMIC_LIB):
     else:
         raise newException("Unsupported platform")
 elif defined(BGFX_BUILD_LIB) or not defined(BGFX_DYNAMIC_LIB) or not defined(BGFX_SHARED_LIB) and not defined(macosx):
-    proc relCompileBGFX(): string = 
-        let dir = getCurrentDir()
-        return "#include \"" & dir & "embed/bgfx/src/amalgamated.cpp" & "\""
-    proc relCompileBX(): string = 
-        let dir = getCurrentDir()
-        return "#include \"" & dir & "embed/bx/src/amalgamated.cpp" & "\""
-    {.emit: relCompileBX().}
-    {.emit: relCompileBGFX().}
+    {.compile: "bx_amalgamated.cpp".}
+    {.compile: "bgfx_amalgamated.cpp".}
     when defined(release):
         {.passC: "-DNDEBUG".}
     else:

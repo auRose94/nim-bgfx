@@ -1,9 +1,9 @@
 # Package
-version = "0.1.6"
+version = "0.2.0"
 author = "Cory Noll Crimmins - Golden"
-description = "BGFX wrapper for the nim programming language."
+description = "Wrapper for the graphics library; BGFX."
 license = "BSD"
 skipDirs = @["examples"]
 
 # Dependencies
-requires "nim >= 0.14.2"
+requires "nim >= 0.16.1"

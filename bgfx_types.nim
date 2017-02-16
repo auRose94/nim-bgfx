@@ -1,3 +1,6 @@
+# Copyright 2017 Cory Noll Crimmins - Golden
+# License: BSD-2
+# Wrapper/binding for bgfx types
 
 type va_list* {.importc,header:"<stdarg.h>".} = object
 

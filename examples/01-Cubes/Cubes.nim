@@ -55,7 +55,6 @@ proc Start(self: ExampleCubes) =
     s_cubeVertices_Decl.Add(bgfx.Attrib_Color0, 4, bgfx.AttribType_Uint8, true)
     s_cubeVertices_Decl.End()
 
-    var vertexmem: ptr bgfx.Memory = bgfx.Alloc(cast[uint32_t](sizeof(PosColorVertex) * 8))
     var vertexdata = [
         PosColorVertex(x: -1.0'f32, y:  1.0'f32, z:  1.0'f32, abgr: 0xff000000'u32 ),
         PosColorVertex(x:  1.0'f32, y:  1.0'f32, z:  1.0'f32, abgr: 0xff0000ff'u32 ),
@@ -66,9 +65,8 @@ proc Start(self: ExampleCubes) =
         PosColorVertex(x: -1.0'f32, y: -1.0'f32, z: -1.0'f32, abgr: 0xffffff00'u32 ),
         PosColorVertex(x:  1.0'f32, y: -1.0'f32, z: -1.0'f32, abgr: 0xffffffff'u32 )
     ]
-    copyMem(vertexmem.data, unsafeAddr(vertexdata[0]), sizeof(PosColorVertex) * 8)
+    var vertexmem: ptr bgfx.Memory = bgfx.Copy(addr(vertexdata[0]), cast[uint32_t](sizeof(PosColorVertex) * 8))
 
-    var indexmem: ptr bgfx.Memory = bgfx.Alloc(cast[uint32_t](sizeof(uint16) * 36))
     var indexdata = [
         0'u16, 1'u16, 2'u16, ## 0
         1'u16, 3'u16, 2'u16,
@@ -82,7 +80,7 @@ proc Start(self: ExampleCubes) =
         4'u16, 5'u16, 1'u16,
         2'u16, 3'u16, 6'u16, ## 10
         6'u16, 3'u16, 7'u16]
-    copyMem(indexmem.data, unsafeAddr(indexdata[0]), sizeof(uint16) * 36)
+    var indexmem: ptr bgfx.Memory = bgfx.Copy(addr(indexdata[0]), cast[uint32_t](sizeof(uint16) * 36))
 
     self.m_vbh = bgfx.CreateVertexBuffer(vertexmem, s_cubeVertices_Decl, BGFX_BUFFER_NONE)
 
@@ -91,6 +89,9 @@ proc Start(self: ExampleCubes) =
     self.m_program = LoadProgram("vs_cubes", "fs_cubes")
 
 proc CleanUp(self: ExampleCubes) =
+    bgfx.DestroyProgram(self.m_program)
+    bgfx.DestroyVertexBuffer(self.m_vbh)
+    bgfx.DestroyIndexBuffer(self.m_ibh)
     bgfx.Shutdown()
 
 proc Update(self: ExampleCubes) =

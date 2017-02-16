@@ -4,7 +4,7 @@ author      = "Cory Noll Crimmins - Golden"
 description = "Hello world example for nim-bgfx"
 license     = "BSD"
 bin         = @["HelloWorld"]
-backend     = "cpp"
+backend     = "c"
 
 # Dependencies
 requires "bgfx >= 0.1.0"

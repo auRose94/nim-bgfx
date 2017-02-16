@@ -4,7 +4,7 @@ author      = "Cory Noll Crimmins - Golden"
 description = "Cubes example for nim-bgfx"
 license     = "BSD"
 bin         = @["Cubes"]
-backend     = "cpp"
+backend     = "c"
 
 # Dependencies
 requires "bgfx >= 0.1.0"
