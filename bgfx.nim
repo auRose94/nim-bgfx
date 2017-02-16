@@ -3,7 +3,6 @@
 # Wrapper/binding for bgfx
 
 {.deadCodeElim: on.}
-{.passL:"-Wl,-rpath=.".}
 
 import bgfx_defines
 export bgfx_defines
@@ -11,7 +10,28 @@ import strutils
 import bgfx_types
 export bgfx_types
 
+proc getCurrentDir(): string = 
+    let sourcePath = currentSourcePath()
+    return sourcePath.substr(0,sourcePath.find("bgfx.nim")-1) 
+
+proc relInclude(): string =
+    let dir = getCurrentDir()
+    var paths = @[
+        "embed/bgfx/3rdparty",
+        "embed/bgfx/3rdparty/dxsdk/include",
+        "embed/bx/include",
+        "embed/bgfx/3rdparty/khronos",
+        "embed/bgfx/include"]
+    when defined(macosx):
+        paths.add("embed/bx/include/compat/osx")
+    var includes: string = ""
+    for path in items(paths):
+        includes = includes & " -I" & dir & path
+    return includes
+{.passC: relInclude().}
+
 when defined(BGFX_SHARED_LIB):
+    {.passL:"-Wl,-rpath,. -Wl,-rpath,/usr/local/lib".}
     {.emit: "#include <bgfx/c99/bgfx.h>".}
     when defined(linux):
         {.pragma: BGFXImport, cdecl.}
@@ -19,6 +39,11 @@ when defined(BGFX_SHARED_LIB):
             {.passL: "-lstdc++ -lbgfx-shared-libRelease -lrt -ldl -lX11 -lGL -lpthread".}
         else:
             {.passL: "-lstdc++ -lbgfx-shared-libDebug -lrt -ldl -lX11 -lGL -lpthread".}
+    elif defined(macosx):
+        when defined(release):
+            {.passL: "libbgfx-shared-libRelease.dylib -framework Cocoa -framework QuartzCore -framework OpenGL -weak_framework Metal -weak_framework MetalKit".}   
+        else:
+            {.passL: "libbgfx-shared-libDebug.dylib -framework Cocoa -framework QuartzCore -framework OpenGL -weak_framework Metal -weak_framework MetalKit".}   
     else:
         raise newException("Unsupported platform")
 elif defined(BGFX_DYNAMIC_LIB):
@@ -31,39 +56,20 @@ elif defined(BGFX_DYNAMIC_LIB):
         {.passL: "-lpthread".}
     else:
         raise newException("Unsupported platform")
-elif defined(BGFX_BUILD_LIB) or not defined(BGFX_DYNAMIC_LIB) or not defined(BGFX_SHARED_LIB):
-    proc getCurrentDir(): string = 
-        let sourcePath = currentSourcePath()
-        return sourcePath.substr(0,sourcePath.find("bgfx.nim")-1) 
+elif defined(BGFX_BUILD_LIB) or not defined(BGFX_DYNAMIC_LIB) or not defined(BGFX_SHARED_LIB) and not defined(macosx):
     proc relCompileBGFX(): string = 
         let dir = getCurrentDir()
-        when defined(macosx):
-            return "#include \"" & dir & "embed/bgfx/src/amalgamated.mm" & "\""
-        else:
-            return "#include \"" & dir & "embed/bgfx/src/amalgamated.cpp" & "\""
+        return "#include \"" & dir & "embed/bgfx/src/amalgamated.cpp" & "\""
     proc relCompileBX(): string = 
         let dir = getCurrentDir()
         return "#include \"" & dir & "embed/bx/src/amalgamated.cpp" & "\""
-    proc relInclude(): string =
-        let dir = getCurrentDir()
-        let paths = [
-            "embed/bgfx/3rdparty",
-            "embed/bgfx/3rdparty/dxsdk/include",
-            "embed/bx/include",
-            "embed/bgfx/3rdparty/khronos",
-            "embed/bgfx/include"]
-        var includes: string = ""
-        for path in items(paths):
-            includes = includes & " -I" & dir & path
-        return includes
     {.emit: relCompileBX().}
     {.emit: relCompileBGFX().}
-    {.passC: relInclude().}
     when defined(release):
         {.passC: "-DNDEBUG".}
     else:
         {.passC: "-D_DEBUG -DBGFX_CONFIG_DEBUG=1".}
-    {.passC: "-std=c++11 -DBX_CONFIG_ENABLE_MSVC_LEVEL4_WARNINGS=1 -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS".}
+    {.passC: "-std=c++11 -I/usr/local/include -DBX_CONFIG_ENABLE_MSVC_LEVEL4_WARNINGS=1 -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS".}
     {.passL: "-lstdc++".} 
     when defined(linux):
         {.passL: "-lrt -ldl -lX11 -lGL -lpthread".}
@@ -71,7 +77,9 @@ elif defined(BGFX_BUILD_LIB) or not defined(BGFX_DYNAMIC_LIB) or not defined(BGF
         {.passL: "-framework Cocoa -framework QuartzCore -framework OpenGL -weak_framework Metal -weak_framework MetalKit".}   
     elif defined(windows):
         {.passL: "-lgdi32 -lpsapi".}
-    {.pragma: BGFXImport.}  
+    {.pragma: BGFXImport, cdecl.}  
+else:
+    raise newException("Unsupported platform")
 
 
 
@@ -118,11 +126,11 @@ when defined(BGFX_SHARED_LIB) or defined(BGFX_BUILD_LIB):
     proc GetCaps*(): ptr Caps =
         {.emit: "return bgfx_get_caps();".}
     proc GetHmd*(): ptr HMD =
-        {.emit: "return bgfx_get_hmd();".}
+        {.emit: "return (bgfx_hmd_t *)bgfx_get_hmd();".}
     proc GetStats*(): ptr Stats =
         {.emit: "return bgfx_get_stats();".}
     proc Alloc*(size: uint32_t): ptr Memory =
-        {.emit: "return bgfx_alloc(`size`);".}
+        {.emit: "return (bgfx_memory_t *)bgfx_alloc(`size`);".}
     proc Copy*(data: pointer; size: uint32_t): ptr Memory =
         {.emit: "return bgfx_copy(`data`, `size`);".}
     proc MakeRef*(data: pointer; size: uint32_t; releaseFn: ReleaseFn = nil; userData: pointer = nil): ptr Memory =
@@ -131,7 +139,7 @@ when defined(BGFX_SHARED_LIB) or defined(BGFX_BUILD_LIB):
         {.emit: "bgfx_set_debug(`debug`);".}
     proc DebugTextClear*(attr: uint8_t = 0; small: bool = false) =
         {.emit: "bgfx_dbg_text_clear(`attr`, `small`);".}
-    proc DebugTextPrintf*(x: uint16_t; y: uint16_t; attr: uint8_t; format: cstring) {.importc: "bgfx_dbg_text_printf", varargs.}
+    proc DebugTextPrintf*(x: uint16_t; y: uint16_t; attr: uint8_t; format: cstring) {.importc: "bgfx_dbg_text_printf", nodecl, varargs.}
     proc DebugTextVPrintf*(x: uint16_t; y: uint16_t; attr: uint8_t; format: cstring, argList: va_list) =
         {.emit: "bgfx_dbg_text_vprintf(`x`, `y`, `attr`, `format`, `argList`);".}
     proc DebugTextImage*(x: uint16_t; y: uint16_t; width: uint16_t; height: uint16_t; data: auto; pitch: uint16_t) =
