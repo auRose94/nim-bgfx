@@ -300,9 +300,9 @@ when defined(BGFX_SHARED_LIB) or defined(BGFX_BUILD_LIB):
     proc SetVertexBuffer*(handle: VertexBufferHandle; startVertex: uint32_t = 0; numVertices: uint32_t = uint32.high) =
         {.emit: "bgfx_set_vertex_buffer(`handle`, `startVertex`, `numVertices`);".}
     proc SetVertexBuffer*(handle: DynamicVertexBufferHandle; startVertex: uint32_t = 0; numVertices: uint32_t = uint32.high) =
-        {.emit: "bgfx_set_vertex_buffer(`handle`, `startVertex`, `numVertices`);".}
+        {.emit: "bgfx_set_dynamic_vertex_buffer(`handle`, `startVertex`, `numVertices`);".}
     proc SetVertexBuffer*(tvb: ptr TransientVertexBuffer; startVertex: uint32_t = 0; numVertices: uint32_t = uint32.high) =
-        {.emit: "bgfx_set_vertex_buffer(`tvb`, `startVertex`, `numVertices`);".}
+        {.emit: "bgfx_set_transient_vertex_buffer(`tvb`, `startVertex`, `numVertices`);".}
     proc SetInstanceDataBuffer*(idb: ptr InstanceDataBuffer; num: uint32_t = uint32.high) =
         {.emit: "bgfx_set_instance_data_buffer(`idb`, `num`);".}
     proc SetInstanceDataBuffer*(handle: VertexBufferHandle; startVertex: uint32_t; num: uint32_t) =

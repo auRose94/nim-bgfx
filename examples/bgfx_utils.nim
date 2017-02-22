@@ -16,6 +16,13 @@ proc LoadMemory*(path: string): ptr bgfx.Memory =
         return mem
     return nil
 
+proc ToMemory*(data: var seq[uint8]): ptr bgfx.Memory = 
+    var size = data.len()
+    var mem = bgfx.Alloc(cast[uint32](size+1))
+    copyMem(mem.data, addr(data[0]), size)
+    cast[ptr uint8](cast[int](mem.data) + cast[int](size))[] = cast[uint8]('\0')
+    return mem 
+
 proc LoadShader*(name: string): bgfx.ShaderHandle =
     var path = "./"
     case bgfx.GetRendererType()
@@ -37,6 +44,9 @@ proc LoadShader*(name: string): bgfx.ShaderHandle =
         raise newException(SystemError, "Invalid bgfx renderer type")
     path &= name & ".bin"
     return bgfx.CreateShader(LoadMemory(path))
+
+proc LoadProgram*(vertData, fragData: var seq[uint8]): bgfx.ProgramHandle =
+    return bgfx.CreateProgram(bgfx.CreateShader(ToMemory(vertData)), bgfx.CreateShader(ToMemory(fragData)), true)
 
 proc LoadProgram*(vertName: string, fragName: string): bgfx.ProgramHandle =
     return bgfx.CreateProgram(LoadShader(vertName), LoadShader(fragName), true)

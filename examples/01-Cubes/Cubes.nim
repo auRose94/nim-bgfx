@@ -39,7 +39,7 @@ proc Start(self: ExampleCubes) =
     self.m_debug = BGFX_DEBUG_TEXT # or BGFX_DEBUG_STATS
     self.m_reset = 0'u32 # BGFX_RESET_VSYNC
 
-    # Seperate Thread
+    # Separate Thread
     bgfx.Init(m_renderer_type, m_pciID, 0, nil, nil)
     bgfx.Reset(self.m_width, self.m_height, self.m_reset)
 
