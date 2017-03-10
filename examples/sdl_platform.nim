@@ -13,8 +13,9 @@ proc GetTime*(): float64 =
     return cast[float64](getPerformanceCounter()*1000) / cast[float64](getPerformanceFrequency())
 
 proc LinkSDL2WithBGFX(window: Window) =
-    var pd: ptr PlatformData = create(PlatformData) 
+    var pd: ptr PlatformData = create(PlatformData)
     var info: SysWMinfo
+    version(info.version)
     assert getWindowWMInfo(window, addr(info))
     echo "SDL2 version: $1.$2.$3 - Subsystem: $4".format(info.version.major.int, info.version.minor.int, info.version.patch.int, info.subsystem)
     case(info.subsystem):
