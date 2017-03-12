@@ -4,7 +4,16 @@
 
 {.deadCodeElim: on.}
 
-import sdl2/sdl, sdl2/sdl_syswm
+when defined(macosx):
+  type
+    NSWindow = object
+    SysWMinfoCocoaObj = object
+        window: ptr NSWindow ## The Cocoa window
+
+    SysWMinfoKindObj = object
+        cocoa: SysWMinfoCocoaObj
+
+import sdl2.sdl, sdl2.sdl_syswm
 import bgfx.bgfx
 import bgfx.platform
 import strutils
@@ -13,48 +22,47 @@ proc GetTime*(): float64 =
     return cast[float64](getPerformanceCounter()*1000) / cast[float64](getPerformanceFrequency())
 
 proc LinkSDL2WithBGFX(window: Window) =
-    var pd: ptr PlatformData = create(PlatformData) 
+    var pd: PlatformData = PlatformData()
     var info: SysWMinfo
     version(info.version)
-    assert getWindowWMInfo(window, addr(info))
+    if(sdl_syswm.getWindowWMInfo(window, addr(info)) != true):
+        raise newException(Exception, "Failed to get system info")
     echo "SDL2 version: $1.$2.$3 - Subsystem: $4".format(info.version.major.int, info.version.minor.int, info.version.patch.int, info.subsystem)
-    case(info.subsystem):
-        of SysWM_Windows:
-            when defined(windows):
-                pd.nwh = cast[pointer](info.info.win.window)
-            pd.ndt = nil
-        of SysWM_X11:
-            when defined(linux):
-                pd.nwh = cast[pointer](info.info.x11.window)
-                pd.ndt = cast[pointer](info.info.x11.display)
-        of SysWM_Cocoa:
-            when defined(osx):
-                pd.nwh = cast[pointer](info.info.cocoa.window)
-            pd.ndt = nil
-        else:
-            echo "[SDL2] failed to get handle: $1".format(sdl.getError())
-            raise newException(OSError, "No structure for subsystem type")
-
     pd.backBuffer = nil
     pd.backBufferDS = nil
     pd.context = nil
-    SetPlatformData(pd)
+    pd.session = nil
+    pd.ndt = nil
+    case(info.subsystem):
+        of SysWM_Windows:
+            when defined(windows) and defined(SDL_VIDEO_DRIVER_WINDOWS):
+                pd.nwh = cast[pointer](info.info.win.window)
+        of SysWM_X11:
+            when defined(linux) and defined(SDL_VIDEO_DRIVER_X11):
+                pd.nwh = cast[pointer](info.info.x11.window)
+                pd.ndt = cast[pointer](info.info.x11.display)
+        of SysWM_Cocoa:
+            when defined(macosx):
+                pd.nwh = (cast[SysWMinfoKindObj](info.info)).cocoa.window
+        else:
+            raise newException(Exception, "No structure for subsystem type")
+    if(pd.nwh == nil):
+        raise newException(Exception, "Failed to get platform handle for window")
+    platform.SetPlatformData(addr(pd))
 
 proc StartExample*[Example]() =
     var app: Example = Example()
 
-    if init(0) != 0:
-        echo "[SDL2] Failed to initialize!"
-        quit(QuitFailure)
+    if sdl.init(0) != 0:
+        raise newException(Exception, "Failed to initialize SDL2")
 
     var window: Window
-    window = createWindow("",
+    window = sdl.createWindow("",
                 WINDOWPOS_UNDEFINED, WINDOWPOS_UNDEFINED,
                 1280, 720,
-                WINDOW_SHOWN or WINDOW_RESIZABLE)
+                WINDOW_SHOWN or WINDOW_RESIZABLE or WINDOW_ALLOW_HIGHDPI)
     if window == nil:
-        echo "[SDL2] Failed to create window!"
-        quit(QuitFailure)
+        raise newException(Exception, "Failed to create window")
 
     LinkSDL2WithBGFX(window)
 
@@ -62,10 +70,11 @@ proc StartExample*[Example]() =
 
     var evt: sdl.Event
 
-    while true:
+    var quit = false
+    while not quit:
         while sdl.pollEvent(evt.addr) == 1:
             if(evt.kind == sdl.Quit):
-                break
+                quit = true
             elif(evt.kind == sdl.WINDOWEVENT):
                 var windowEvent = cast[WindowEventObj](evt.addr)
                 var current_width, current_height: cint
@@ -81,5 +90,5 @@ proc StartExample*[Example]() =
 
     app.CleanUp()
 
-    destroyWindow(window)
+    sdl.destroyWindow(window)
     sdl.quit()

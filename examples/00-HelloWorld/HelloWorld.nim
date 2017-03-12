@@ -25,10 +25,6 @@ type ExampleHelloWorld = ref object
     m_reset*: uint32
 
 proc Start(self: ExampleHelloWorld) =
-
-    var m_renderer_type = bgfx.RendererType.RendererType_Count
-    var m_pciID = 0'u16
-
     self.m_width = 1280
     self.m_height = 720
     self.m_window_width = 1280
@@ -38,7 +34,7 @@ proc Start(self: ExampleHelloWorld) =
 
     #Seperate Thread
     #bgfxplatform.RenderFrame()
-    bgfx.Init(m_renderer_type, m_pciID, 0, nil, nil)
+    bgfx.Init()
     bgfx.Reset(self.m_width, self.m_height, self.m_reset)
 
     # Enable Debug Text

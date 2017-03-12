@@ -30,17 +30,15 @@ type PosColorVertex {.packed, pure.} = object
 var s_cubeVertices_Decl: ptr bgfx.VertexDecl
 
 proc Start(self: ExampleCubes) =
-
-    var m_renderer_type = bgfx.RendererType.RendererType_Count
-    var m_pciID = 0'u16
-
     self.m_width = 1280
-    self.m_height = 1280
+    self.m_height = 720
+    self.m_window_width = 1280
+    self.m_window_height = 720
     self.m_debug = BGFX_DEBUG_TEXT # or BGFX_DEBUG_STATS
     self.m_reset = 0'u32 # BGFX_RESET_VSYNC
 
     # Separate Thread
-    bgfx.Init(m_renderer_type, m_pciID, 0, nil, nil)
+    bgfx.Init()
     bgfx.Reset(self.m_width, self.m_height, self.m_reset)
 
     # Enable Debug Text
@@ -89,6 +87,7 @@ proc Start(self: ExampleCubes) =
     self.m_program = LoadProgram("vs_cubes", "fs_cubes")
 
 proc CleanUp(self: ExampleCubes) =
+    freeShared s_cubeVertices_Decl
     bgfx.DestroyProgram(self.m_program)
     bgfx.DestroyVertexBuffer(self.m_vbh)
     bgfx.DestroyIndexBuffer(self.m_ibh)

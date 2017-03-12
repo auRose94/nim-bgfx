@@ -56,7 +56,7 @@ elif defined(BGFX_DYNAMIC_LIB):
         {.passL: "-lpthread".}
     else:
         raise newException("Unsupported platform")
-elif defined(BGFX_BUILD_LIB) or not defined(BGFX_DYNAMIC_LIB) or not defined(BGFX_SHARED_LIB) and not defined(macosx):
+elif defined(BGFX_BUILD_LIB) or (not defined(BGFX_DYNAMIC_LIB) and not defined(BGFX_SHARED_LIB)):
     {.compile: "bx_amalgamated.cpp".}
     when defined(macosx):
         {.compile: "bgfx_amalgamated.mm".}

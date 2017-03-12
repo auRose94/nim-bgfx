@@ -422,17 +422,15 @@ proc triangulate*(vert_result: var ptr PosNormalColorVertex; stride: int; rgb: a
 var s_metaballVertices_Decl: ptr bgfx.VertexDecl
 
 proc Start(self: ExampleMetaball) =
-
-    let m_renderer_type = bgfx.RendererType.RendererType_Count
-    let m_pciID = 0'u16
-
     self.m_width = 1280
-    self.m_height = 1280
+    self.m_height = 720
+    self.m_window_width = 1280
+    self.m_window_height = 720
     self.m_debug = BGFX_DEBUG_TEXT # or BGFX_DEBUG_STATS
     self.m_reset =  BGFX_RESET_VSYNC
 
     # Separate Thread
-    bgfx.Init(m_renderer_type, m_pciID, 0, nil, nil)
+    bgfx.Init()
     bgfx.Reset(self.m_width, self.m_height, self.m_reset)
 
     # Enable Debug Text

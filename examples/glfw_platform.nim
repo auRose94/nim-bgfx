@@ -27,13 +27,11 @@ proc GLFWErrorCB(errorCode: cint; description: cstring) {.cdecl.} =
     debugEcho "[GLFW3] error: $1, $2".format(errorCode, description)
 
 proc LinkGLFW3WithBGFX(window: Window) =
-    var pd: ptr PlatformData = create(PlatformData)
+    var pd: PlatformData = PlatformData()
     when defined(Windows):
         pd.nwh = glfwn.GetWin32Window(window)
-        pd.ndt = nil
     elif defined(MacOSX):
         pd.nwh = glfwn.GetCocoaWindow(window)
-        pd.ndt = nil
     elif defined(Linux) or
         defined(FreeBSD) or
         defined(OpenBSD) or
@@ -44,10 +42,8 @@ proc LinkGLFW3WithBGFX(window: Window) =
         pd.ndt = glfwn.GetX11Display()
     else:
         {.fatal: "Exposure of glfw3native functions is required".}
-    pd.backBuffer = nil
-    pd.backBufferDS = nil
-    pd.context = nil
-    SetPlatformData(pd)
+
+    SetPlatformData(addr(pd))
 
 proc StartExample*[Example]() =
     var app: Example = Example()
@@ -56,22 +52,21 @@ proc StartExample*[Example]() =
     discard glfw.SetErrorCallback(GLFWErrorCB)
 
     if glfw.Init() != glfw.TRUE:
-        echo "[GLFW3] Failed to initialize!"
-        quit(QuitFailure)
+        raise newException(Exception, "Failed to initialize GLFW3")
 
     glfw.WindowHint(glfw.CLIENT_API, glfw.NO_API)
     var window: Window
     window = glfw.CreateWindow(1280, 720, "", nil, nil)
     if window == nil:
-        echo "[GLFW3] Failed to create window!"
-        quit(QuitFailure)
+        raise newException(Exception, "Failed to create window")
     glfw.SetWindowUserPointer(window, app.addr)
 
     LinkGLFW3WithBGFX(window)
 
     app.Start()
 
-    while true:
+    var quit = false
+    while not quit:
         glfw.PollEvents()
         var current_width, current_height: cint
         var current_window_width, current_window_height: cint
@@ -85,7 +80,7 @@ proc StartExample*[Example]() =
             app.m_window_height = cast[uint32](current_window_height)
             bgfx.Reset(cast[uint16](app.m_window_width), cast[uint16](app.m_window_height), app.m_reset)
         if glfw.WindowShouldClose(window) != 0:
-            break
+            quit = true
         app.Update()
 
     app.CleanUp()
