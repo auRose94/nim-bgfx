@@ -2,7 +2,7 @@
 # License: BSD-2
 # Port of bgfx helloworld example 00 to nim and nim-bgfx
 
-import bgfx
+import bgfx.bgfx
 when defined(useSDL):
     import ../sdl_platform
 elif defined(useGLFW) or not defined(useSDL):

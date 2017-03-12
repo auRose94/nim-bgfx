@@ -4,11 +4,11 @@
 
 {.deadCodeElim: on.}
 
-import bgfx_defines
-export bgfx_defines
+import defines
+export defines
 import strutils
-import bgfx_types
-export bgfx_types
+import types
+export types
 
 proc getCurrentDir(): string = 
     let sourcePath = currentSourcePath()
@@ -17,13 +17,13 @@ proc getCurrentDir(): string =
 proc relInclude(): string =
     let dir = getCurrentDir()
     var paths = @[
-        "embed/bgfx/3rdparty",
-        "embed/bgfx/3rdparty/dxsdk/include",
-        "embed/bx/include",
-        "embed/bgfx/3rdparty/khronos",
-        "embed/bgfx/include"]
+        "../embed/bgfx/3rdparty",
+        "../embed/bgfx/3rdparty/dxsdk/include",
+        "../embed/bx/include",
+        "../embed/bgfx/3rdparty/khronos",
+        "../embed/bgfx/include"]
     when defined(macosx):
-        paths.add("embed/bx/include/compat/osx")
+        paths.add("../embed/bx/include/compat/osx")
     var includes: string = ""
     for path in items(paths):
         includes = includes & " -I" & dir & path

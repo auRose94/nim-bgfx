@@ -2,7 +2,7 @@
 # License: BSD-2
 # Port of bgfx metaballs example 02 to nim and nim-bgfx
 
-import bgfx
+import bgfx.bgfx
 import ../bgfx_utils
 import ../fpu_math
 when defined(useSDL):

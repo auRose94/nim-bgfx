@@ -5,7 +5,7 @@
 {.deadCodeElim: on.}
 
 import glfw3 as glfw
-import bgfx, bgfx_platform
+import bgfx.bgfx, bgfx.platform
 import strutils
 
 when defined(Windows):

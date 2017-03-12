@@ -2,8 +2,8 @@
 # License: BSD-2
 # Wrapper/binding for bgfx platform
 
-import bgfx_types
-export bgfx_types
+import types
+export types
 
 {.deadCodeElim: on.}
 
@@ -21,8 +21,8 @@ elif defined(BGFX_DYNAMIC_LIB):
 else:
     {.pragma: BGFXImport, cdecl.}
 
-import bgfx_defines, bgfx
-export bgfx_defines
+import defines, bgfx
+export defines
 
 type RenderFrameEnum* = enum
     RenderFrame_NoContext,

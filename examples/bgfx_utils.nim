@@ -2,7 +2,7 @@
 # License: BSD-2
 # Port for bgfx utilities
 
-import bgfx
+import bgfx.bgfx
 
 proc LoadMemory*(path: string): ptr bgfx.Memory =
     var file: File

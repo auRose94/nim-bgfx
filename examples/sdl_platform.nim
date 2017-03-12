@@ -5,8 +5,8 @@
 {.deadCodeElim: on.}
 
 import sdl2/sdl, sdl2/sdl_syswm
-import bgfx as bgfx
-import bgfx_platform
+import bgfx.bgfx
+import bgfx.platform
 import strutils
 
 proc GetTime*(): float64 =
@@ -15,6 +15,7 @@ proc GetTime*(): float64 =
 proc LinkSDL2WithBGFX(window: Window) =
     var pd: ptr PlatformData = create(PlatformData) 
     var info: SysWMinfo
+    version(info.version)
     assert getWindowWMInfo(window, addr(info))
     echo "SDL2 version: $1.$2.$3 - Subsystem: $4".format(info.version.major.int, info.version.minor.int, info.version.patch.int, info.subsystem)
     case(info.subsystem):
