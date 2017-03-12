@@ -6,9 +6,8 @@
 
 when defined(macosx):
   type
-    NSWindow = object
     SysWMinfoCocoaObj = object
-        window: ptr NSWindow ## The Cocoa window
+        window: pointer ## The Cocoa window
 
     SysWMinfoKindObj = object
         cocoa: SysWMinfoCocoaObj
