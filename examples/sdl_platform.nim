@@ -18,7 +18,7 @@ import bgfx.platform
 import strutils
 
 proc GetTime*(): float64 =
-    return cast[float64](getPerformanceCounter()*1000) / cast[float64](getPerformanceFrequency())
+    return (float64(getPerformanceCounter()) * 1000'f64) / float64(getPerformanceFrequency())
 
 proc LinkSDL2WithBGFX(window: Window) =
     var pd: PlatformData = PlatformData()
@@ -75,16 +75,20 @@ proc StartExample*[Example]() =
             if(evt.kind == sdl.Quit):
                 quit = true
             elif(evt.kind == sdl.WINDOWEVENT):
-                var windowEvent = cast[WindowEventObj](evt.addr)
-                var current_width, current_height: cint
-                sdl.glGetDrawableSize(window, current_width.addr, current_height.addr)
-                if cast[uint32](current_width) != app.m_width or cast[uint32](current_height) != app.m_height:
-                    echo "Window resize: ($1, $2)".format(current_width, current_height)
-                    app.m_width = cast[uint32](current_width)
-                    app.m_height = cast[uint32](current_height)
-                    app.m_window_width = cast[uint32](windowEvent.data1)
-                    app.m_window_height = cast[uint32](windowEvent.data2)
+                case evt.window.event
+                of WINDOWEVENT_SIZE_CHANGED:
+                    var current_width, current_height: cint
+                    sdl.glGetDrawableSize(window, current_width.addr, current_height.addr)
+                    if cast[uint32](current_width) != app.m_width or cast[uint32](current_height) != app.m_height:
+                        echo "Window resize: ($1, $2)".format(current_width, current_height)
+                        app.m_width = cast[uint32](current_width)
+                        app.m_height = cast[uint32](current_height)
+                    app.m_window_width = cast[uint32](evt.window.data1)
+                    app.m_window_height = cast[uint32](evt.window.data2)
                     bgfx.Reset(cast[uint16](app.m_window_width), cast[uint16](app.m_window_height), app.m_reset)
+                of WINDOWEVENT_CLOSE:
+                    quit = true
+                else: discard
         app.Update()
 
     app.CleanUp()
