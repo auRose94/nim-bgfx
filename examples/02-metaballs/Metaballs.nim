@@ -475,7 +475,6 @@ proc Start(self: ExampleMetaball) =
 proc CleanUp(self: ExampleMetaball) =
     bgfx.DestroyProgram(self.m_program)
     bgfx.Shutdown()
-    sleep(3)
 
 proc Update(self: ExampleMetaball) =
     const y_pitch = DIMS
@@ -491,7 +490,7 @@ proc Update(self: ExampleMetaball) =
     let frameTime: float32 =  now - last
     last = now
     var time = now / 1e3       # slow down a bit
-    
+
     # Use debug font to print information about this example.
     bgfx.DebugTextClear()
     bgfx.DebugTextPrintf(0, 1, 0x4f, "nim-bgfx/examples/02-metaballs")
@@ -540,7 +539,7 @@ proc Update(self: ExampleMetaball) =
         index = index+1
 
     prof_update = GetTime() 
-    
+
     var zz = 0
     var yy = 0
     var xx = 0
@@ -594,7 +593,7 @@ proc Update(self: ExampleMetaball) =
         zz = zz+1
 
     prof_normal = GetTime()-prof_normal
-    
+
     prof_triangulate = GetTime()
 
     var current_pos = cast[ptr PosNormalColorVertex](tvb.data)
@@ -607,7 +606,7 @@ proc Update(self: ExampleMetaball) =
         rgb[5] = (fzz+1)*inv_dim
         yy = 0
         while yy < DIMS-1 and num_vertices+12 < max_vertices:
-            let fyy = float32(yy)   
+            let fyy = float32(yy)
             let offset = (zz*DIMS+yy)*DIMS
             rgb[1] = fyy*inv_dim
             rgb[4] = (fyy+1)*inv_dim
