@@ -639,7 +639,7 @@ proc Update(self: ExampleMetaball) =
                 xx = xx+1
             yy = yy+1
         zz = zz+1
-    
+
     prof_triangulate = GetTime()-prof_triangulate
 
     var mtx: Mat4
